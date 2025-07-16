@@ -1,10 +1,10 @@
 namespace Variables {
 
-struct Type {
-	Type parent;
+struct V {
+	V *parent;
 }
 
-Type& object;
+V& object;
 
 void init();
 

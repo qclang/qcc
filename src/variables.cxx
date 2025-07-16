@@ -3,7 +3,7 @@
 namespace Variable {
 
 void init() 
-	object.parent = object;
+	object.parent = &object;
 }
 
 }
