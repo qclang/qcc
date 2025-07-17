@@ -1,12 +1,12 @@
 namespace Variables {
 
 struct Type {
-	Type *parent;
+	const Type *parent = nullptr;
 };
 
 //primitives
 namespace Prim {
-	constexpr Type  t_bit{},
+	inline const Type  t_bit{},
 			t_qbit{},
 			t_int{},
 			t_float{},
