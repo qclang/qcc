@@ -17,7 +17,7 @@ void proc(char *data, size_t length) {
 			eval_macro(data, index);
 		} else if('a' <= curr && curr <= 'z') { // Identifiers/keyword must start with an alphabetic char
 			std::string idtf = readAlpNum(data, index);
-			procIdtf(idtf);
+			procAlpNum(idtf);
 		} else if('0' <= curr && curr <= '9') { // Number literal
 			std::string num = readNum(data, index);
                         procNum(num);
