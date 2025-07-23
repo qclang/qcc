@@ -1,3 +1,5 @@
+#pragma once
+
 #include <variables.hxx>
 
 #include <cstddef>
@@ -71,6 +73,7 @@ typedef enum {
 	TOK_KEY_RETURN
 } Type;
 
+}
 
 struct Token {
 	Tokens::Type ttype;
@@ -90,5 +93,3 @@ struct Token {
 	bool isSynthetic = false;
 
 };
-
-}
