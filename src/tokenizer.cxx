@@ -16,16 +16,16 @@ void proc(char *data, size_t length) {
 			++index;
 			eval_macro(data, index);
 		} else if('a' <= curr && curr <= 'z') { // Identifiers/keyword must start with an alphabetic char
-			std::string& idtf = readAlpNum(data, index);
+			std::string idtf = readAlpNum(data, index);
 			procIdtf(idtf);
 		} else if('0' <= curr && curr <= '9') { // Number literal
-			std::string& num = readNum(data, index);
+			std::string num = readNum(data, index);
                         procNum(num);
 		} else if(curr == '\'') { // Character literal
-			char& c = readChar(data, index);
+			char c = readChar(data, index);
 			procChar(c);
 		} else if(curr == '"') { // String literal
-			std::string& s = readString(data, index);
+			std::string s = readString(data, index);
 			procString(s);
 		}
         }
