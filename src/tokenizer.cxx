@@ -1,4 +1,5 @@
 #include <tokens.hxx>
+#include <tokenizer.hxx>
 #include <string>
 #include <cstring>
 
@@ -13,7 +14,7 @@ void proc(char *data, size_t length) {
 		peek = data[index + 1];
                 if(curr == '#' && line_beg) {
 			++index;
-			eval_macro(in);
+			eval_macro(data, index);
 		} else if('a' <= curr && curr <= 'z') { // Identifiers/keyword must start with an alphabetic char
 			std::string& idtf = readAlpNum(data, index);
 			procIdtf(idtf);
@@ -29,6 +30,11 @@ void proc(char *data, size_t length) {
 		}
         }
 }
+
+void procAlpNum(std::string& s) {};
+void procNum(std::string& s) {};
+void procChar(char& c) {};
+void procString(std::string& s) {};
 
 std::string readAlpNum(char* data, size_t& index) {
 	size_t end=index;
