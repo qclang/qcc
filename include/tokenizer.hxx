@@ -18,7 +18,7 @@ namespace Tokenizer {
 
 	std::string readAlpNum(char* data, size_t& index);
 	std::string readNum(char* data, size_t& index);
-	std::string readChar(char* data, size_t& index);
+	char readChar(char* data, size_t& index);
 	std::string readString(char* data, size_t& index);
 
 	void procAlpNum(std::string& s);
