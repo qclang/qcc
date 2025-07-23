@@ -31,6 +31,8 @@ void proc(char *data, size_t length) {
         }
 }
 
+void eval_macro(char* data, size_t& index) {};
+
 void procAlpNum(std::string& s) {};
 void procNum(std::string& s) {};
 void procChar(char& c) {};
