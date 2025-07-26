@@ -7,14 +7,10 @@
 
 namespace Tokenizer {
 
-	bool line_beg;
-
 	std::vector<Token> tokenizer;
 	std::unordered_map<std::string, std::string> definitions;
 
 	void proc(char* data, size_t length);
-
-	void eval_macro(char* data, size_t& index);
 
 	std::string readAlpNum(char* data, size_t& index);
 	std::string readNum(char* data, size_t& index);

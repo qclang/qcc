@@ -12,10 +12,7 @@ void proc(char *data, size_t length) {
         while(index < length) {
 		curr = data[index];
 		peek = data[index + 1];
-                if(curr == '#' && line_beg) {
-			++index;
-			eval_macro(data, index);
-		} else if('a' <= curr && curr <= 'z') { // Identifiers/keyword must start with an alphabetic char
+                if('a' <= curr && curr <= 'z') { // Identifiers/keyword must start with an alphabetic char
 			std::string idtf = readAlpNum(data, index);
 			procAlpNum(idtf);
 		} else if('0' <= curr && curr <= '9') { // Number literal
@@ -30,8 +27,6 @@ void proc(char *data, size_t length) {
 		}
         }
 }
-
-void eval_macro(char* data, size_t& index) {};
 
 void procAlpNum(std::string& s) {};
 void procNum(std::string& s) {};
@@ -81,7 +76,8 @@ char readChar(char* data, size_t& index) {
 			case '\'':
                                 return '\'';
 		}
-	} else return data[index++];
+	}
+	return data[index++];
 
 }
 
