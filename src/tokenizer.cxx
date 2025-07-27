@@ -19,9 +19,10 @@ void proc(char *data, size_t length) {
         while(index < length) {
 		curr = data[index];
 		peek = data[index + 1];
-                if((curr <= 'Z' && curr >= 'A') || ('a' <= curr && curr <= 'z')) { // Identifiers/keyword must start with an alphabetic char
+                if((curr <= 'Z' && curr >= 'A') || ('a' <= curr && curr <= 'z') || curr == '_') { // Identifiers/keyword must start with an alphabetic char
 			Token idtf = readAlpNum(data, index);
-		} else if('0' <= curr && curr <= '9') { // Number literal
+			procAlpNum(idtf);
+		} else if(('0' <= curr && curr <= '9') || curr == '.') { // Number literal
 			Token num = readNum(data, index);
 		} else if(curr == '\'') { // Character literal
 			Token c = readChar(data, index);
@@ -34,7 +35,29 @@ void proc(char *data, size_t length) {
         }
 }
 
-void procAlpNum(Token& arg) {};
+void procAlpNum(Token& arg) {
+	const std::string& name = arg.name;
+	Tokens::Type type;
+	if(name == "angle" ||
+		name == "qubit" ||
+		name == "bit" ||
+		name == "int" ||
+		name == "float")
+		type = Tokens::TOK_TYPE;
+	else if(name == "struct")
+		type = Tokens::TOK_STRUCT;
+	else if(name == "if")
+		type = Tokens::TOK_KEY_IF;
+	else if(name == "for")
+                type = Tokens::TOK_KEY_FOR;
+	else if(name == "while")
+		type = Tokens::TOK_KEY_WHILE;
+	else if(name == "return")
+		type == Tokens::TOK_KEY_RETURN;
+	else type = Tokens::TOK_IDENTIFIER;
+
+	arg.ttype = type;
+};
 void procNum(Token& arg) {};
 void procChar(Token& arg) {};
 void procString(Token& arg) {};
@@ -80,7 +103,7 @@ Token readNum(char* data, size_t& index) {
         tok.column = end - line_beg + 1;
         tok.startOffset = index;
         tok.endOffset = end;
-
+	tok.ttype = Tokens::TOK_NUMBER_LITERAL;
 
 	index=end;
 	return tok;
@@ -115,6 +138,7 @@ Token readChar(char* data, size_t& index) {
         tok.column = end - line_beg + 1;
         tok.startOffset = index;
         tok.endOffset = end;
+	tok.ttype = Tokens::TOK_CHAR_LITERAL;
 
 	index=end;
 	return tok;
@@ -172,7 +196,7 @@ Token readString(char* data, size_t& index) {
         tok.column = end - line_beg + 1;
         tok.startOffset = index;
         tok.endOffset = end;
-
+	tok.ttype = Tokens::TOK_STRING_LITERAL;
 
 	index=end;
 	return tok;
