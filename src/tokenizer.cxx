@@ -3,7 +3,11 @@
 #include <string>
 #include <cstring>
 
+#include <iostream>
+
 namespace Tokenizer {
+
+	std::vector<Token> tokens;
 
 void proc(char *data, size_t length) {
 	size_t index=0;
@@ -12,30 +16,26 @@ void proc(char *data, size_t length) {
         while(index < length) {
 		curr = data[index];
 		peek = data[index + 1];
-                if('a' <= curr && curr <= 'z') { // Identifiers/keyword must start with an alphabetic char
-			std::string idtf = readAlpNum(data, index);
-			procAlpNum(idtf);
+                if((curr <= 'Z' && curr >= 'A') || ('a' <= curr && curr <= 'z')) { // Identifiers/keyword must start with an alphabetic char
+			Token& idtf = readAlpNum(data, index);
 		} else if('0' <= curr && curr <= '9') { // Number literal
-			std::string num = readNum(data, index);
-                        procNum(num);
+			Token& num = readNum(data, index);
 		} else if(curr == '\'') { // Character literal
-			char c = readChar(data, index);
-			procChar(c);
+			Token& c = readChar(data, index);
 		} else if(curr == '"') { // String literal
-			std::string s = readString(data, index);
-			procString(s);
-		}
+			Token& s = readString(data, index);
+		} else if(curr == '\0') break;
         }
 }
 
-void procAlpNum(std::string& s) {};
-void procNum(std::string& s) {};
-void procChar(char& c) {};
-void procString(std::string& s) {};
+void procAlpNum(Token& arg) {};
+void procNum(Token& arg) {};
+void procChar(Token& arg) {};
+void procString(Token& arg) {};
 
-std::string readAlpNum(char* data, size_t& index) {
+Token readAlpNum(char* data, size_t& index) {
 	size_t end=index;
-	while((data[end] <= 'z' && data[end] >= 'a') || (data[end] <= '9' && data[end] >= '0') || data[end] == '_')
+	while((data[end] <= 'Z' && data[end] >= 'A') || (data[end] <= 'z' && data[end] >= 'a') || (data[end] <= '9' && data[end] >= '0') || data[end] == '_')
 		++end;
 	size_t len = end - index + 1;
 
@@ -44,10 +44,12 @@ std::string readAlpNum(char* data, size_t& index) {
 	buff[len] = '\0';
 	std::string ret =  buff;
 	delete[] buff;
+
+	index=end;
 	return ret;
 }
 
-std::string readNum(char* data, size_t& index) {
+Token readNum(char* data, size_t& index) {
         size_t end=index;
         while((data[end] <= '9' && data[end] >= '0') || data[end] == '_' || data[end] == '.')
                 ++end;
@@ -58,10 +60,11 @@ std::string readNum(char* data, size_t& index) {
 	buff[len] = '\0';
         std::string ret = buff;
 	delete[] buff;
+	index=end;
 	return ret;
 }
 
-char readChar(char* data, size_t& index) {
+Token readChar(char* data, size_t& index) {
 	++index;
 	if(data[index] == '\\') {
 		switch(++index) {
@@ -81,7 +84,7 @@ char readChar(char* data, size_t& index) {
 
 }
 
-std::string readString(char* data, size_t& index) {
+Token readString(char* data, size_t& index) {
 	size_t end=++index;
 	while(data[end] != '"') ++end;
 
@@ -125,6 +128,7 @@ std::string readString(char* data, size_t& index) {
 	buff[len] = '\0';
         std::string ret =  buff;
 	delete[] buff;
+	index=end;
 	return ret;
 }
 
