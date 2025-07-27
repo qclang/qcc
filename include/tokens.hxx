@@ -10,7 +10,9 @@ namespace Tokens {
 typedef enum {
 	TOK_COMMENT,
 
-	TOK_TYPE,
+	TOK_BIT,
+	TOK_QUBIT,
+	TOK_STRUCT,
 	TOK_IDENTIFIER,
 	TOK_NUMBER_LITERAL,
 	TOK_CHAR_LITERAL,
@@ -22,18 +24,7 @@ typedef enum {
 	TOK_KEY_FOR,
 	TOK_KEY_WHILE,
 
-	TOK_KEY_GATE_HADAMARD,
-	TOK_KEY_GATE_PAULI_X,
-	TOK_KEY_GATE_PAULI_Y,
-	TOK_KEY_GATE_PAULI_Z,
-	TOK_KEY_GATE_CNOT,
-	TOK_KEY_GATE_U1,
-	TOK_KEY_GATE_U2,
-	TOK_KEY_GATE_U3,
-	TOK_KEY_GATE_SWAP,
-	TOK_KEY_GATE_CCX,
-
-	TOK_KEY_MEASURE,
+	TOK_KEY_SWAP,
 
 	TOK_DEL_PARANL,  // (
 	TOK_DEL_PARANR,  // )
@@ -78,12 +69,9 @@ typedef enum {
 struct Token {
 	Tokens::Type ttype;
 
-	Variables::Type vtype;
-
 	std::string name;
 
 	int bits;
-	std::byte *value = nullptr;
 
 	int line = 0;
 	int column = 0;
