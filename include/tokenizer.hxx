@@ -3,12 +3,11 @@
 #include<unordered_map>
 #include<vector>
 #include<istream>
-
+#include<tokens.hxx>
 
 namespace Tokenizer {
 
-	std::vector<Token> tokenizer;
-	std::unordered_map<std::string, std::string> definitions;
+	extern std::vector<Token> tokens;
 
 	void proc(char* data, size_t length);
 
