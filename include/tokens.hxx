@@ -8,8 +8,6 @@
 namespace Tokens {
 
 typedef enum {
-	TOK_COMMENT,
-
 	TOK_TYPE,
 	TOK_STRUCT,
 	TOK_IDENTIFIER,
