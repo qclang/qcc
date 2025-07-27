@@ -11,10 +11,10 @@ namespace Tokenizer {
 
 	void proc(char* data, size_t length);
 
-	std::string readAlpNum(char* data, size_t& index);
-	std::string readNum(char* data, size_t& index);
-	char readChar(char* data, size_t& index);
-	std::string readString(char* data, size_t& index);
+	Token readAlpNum(char* data, size_t& index);
+	Token readNum(char* data, size_t& index);
+	Token readChar(char* data, size_t& index);
+	Token readString(char* data, size_t& index);
 
 	void procAlpNum(std::string& s);
 	void procNum(std::string& s);
