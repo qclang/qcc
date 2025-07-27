@@ -16,9 +16,9 @@ namespace Tokenizer {
 	Token readChar(char* data, size_t& index);
 	Token readString(char* data, size_t& index);
 
-	void procAlpNum(std::string& s);
-	void procNum(std::string& s);
-	void procChar(char& c);
-	void procString(std::string& s);
+	void procAlpNum(Token& arg);
+	void procNum(Token& arg);
+	void procChar(Token& arg);
+	void procString(Token& arg);
 
 }
