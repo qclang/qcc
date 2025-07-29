@@ -35,6 +35,7 @@ typedef enum {
 	TOK_SYM_MINUS, // -
 	TOK_SYM_STAR, // *
 	TOK_SYM_SLASH, // /
+	TOK_SYM_COLON,  // :
 	TOK_SYM_SEMICOLON, // ;
 
 	TOK_OP_EQEQ, // ==
