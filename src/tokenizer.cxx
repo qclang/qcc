@@ -7,9 +7,23 @@
 
 namespace Tokenizer {
 
-	std::vector<Token> tokens;
+std::vector<Token> tokens;
 
-	size_t index, line, line_beg;
+size_t index, line, line_beg;
+
+Token readAlpNum(char* data, size_t& index);
+Token readNum(char* data, size_t& index);
+Token readChar(char* data, size_t& index);
+Token readString(char* data, size_t& index);
+Token readSymbol(char* data, size_t& index);
+
+void procAlpNum(Token& arg);
+void procNum(Token& arg);
+void procChar(Token& arg);
+void procString(Token& arg);
+void procSymbol(Token& arg);
+
+bool isSymbol(char* data, size_t& index);
 
 void proc(char *data, size_t length) {
 	index = line_beg = 0;
@@ -28,6 +42,9 @@ void proc(char *data, size_t length) {
 			Token c = readChar(data, index);
 		} else if(curr == '"') { // String literal
 			Token s = readString(data, index);
+		} else if(isSymbol(data, index)) {
+			Token s = readSymbol(data, index);
+			procSymbol(s);
 		} else if(curr == '\n') {
 			++line;
 			line_beg = ++index;
@@ -61,6 +78,7 @@ void procAlpNum(Token& arg) {
 void procNum(Token& arg) {};
 void procChar(Token& arg) {};
 void procString(Token& arg) {};
+void procSymbol(Token& arg) {};
 
 Token readAlpNum(char* data, size_t& index) {
 	size_t end=index;
@@ -201,5 +219,51 @@ Token readString(char* data, size_t& index) {
 	index=end;
 	return tok;
 }
+
+Token readSymbol(char* data, size_t& index) {
+	Token tok;
+        tok.name = data[index];
+        tok.line = line;
+        tok.column = index - line_beg + 1;
+        tok.startOffset = tok.endOffset = index;
+
+	if(isSymbol(data, ++index)) {
+		tok.line += data[index++];
+		++tok.endOffset;
+	}
+
+	return tok;
+}
+
+bool isSymbol(char* data, size_t& index) {
+	char& c = data[index],
+		p = data[index + 1];
+	switch(c) {
+		case '(':
+		case ')':
+		case '{':
+		case '}':
+		case '[':
+		case ']':
+		case '=':
+		case '+':
+		case '-':
+		case '*':
+		case '/':
+		case ':':
+		case ';':
+		case '!':
+		case '<':
+		case '>':
+		case '&':
+		case '|':
+		case '^':
+		case '~':
+		case '.':
+		case ',':
+			return true;
+	}
+	return false;
+};
 
 }
