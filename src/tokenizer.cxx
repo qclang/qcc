@@ -78,7 +78,72 @@ void procAlpNum(Token& arg) {
 void procNum(Token& arg) {};
 void procChar(Token& arg) {};
 void procString(Token& arg) {};
-void procSymbol(Token& arg) {};
+void procSymbol(Token& arg) {
+	const std::string& name = arg.name;
+	Tokens::Type type;
+	if(name == "(")
+		type = Tokens::TOK_DEL_PARANL;
+	else if(name == ")")
+		type = Tokens::TOK_DEL_PARANR;
+	else if(name == "{")
+		type = Tokens::TOK_DEL_CBRACL;
+	else if(name == "}")
+		type = Tokens::TOK_DEL_CBRACR;
+	else if(name == "[")
+		type = Tokens::TOK_DEL_SBRACL;
+	else if(name == "]")
+                type = Tokens::TOK_DEL_SBRACR;
+	else if(name == "=")
+		type = Tokens::TOK_SYM_EQ;
+	else if(name == "+")
+                type = Tokens::TOK_SYM_PLUS;
+	else if(name == "-")
+                type = Tokens::TOK_SYM_MINUS;
+	else if(name == "*")
+                type = Tokens::TOK_SYM_STAR;
+	else if(name == "/")
+                type = Tokens::TOK_SYM_SLASH;
+	else if(name == ":")
+                type = Tokens::TOK_SYM_COLON;
+	else if(name == ";")
+                type = Tokens::TOK_SYM_SEMICOLON;
+	else if(name == "==")
+                type = Tokens::TOK_OP_EQEQ;
+	else if(name == "!=")
+                type = Tokens::TOK_OP_NEQ;
+	else if(name == "<")
+                type = Tokens::TOK_OP_LT;
+	else if(name == ">")
+                type = Tokens::TOK_OP_RT;
+	else if(name == "<=")
+                type = Tokens::TOK_OP_LTE;
+        else if(name == ">=")
+                type = Tokens::TOK_OP_RTE;
+	else if(name == "&&")
+                type = Tokens::TOK_OP_AND;
+        else if(name == "||")
+                type = Tokens::TOK_OP_OR;
+	else if(name == "!")
+		type = Tokens::TOK_OP_NOT;
+	else if(name == "&")
+		type = Tokens::TOK_OP_BIT_AND;
+	else if(name == "|")
+                type = Tokens::TOK_OP_BIT_OR;
+	else if(name == "^")
+                type = Tokens::TOK_OP_XOR;
+	else if(name == "~")
+                type = Tokens::TOK_OP_NEG;
+	else if(name == "<<")
+		type = Tokens::TOK_OP_SHL;
+	else if(name == ">>")
+                type = Tokens::TOK_OP_SHR;
+	else if(name == ",")
+                type = Tokens::TOK_COMMA;
+	else if(name == ".")
+                type = Tokens::TOK_DOT;
+
+	arg.ttype = type;
+};
 
 Token readAlpNum(char* data, size_t& index) {
 	size_t end=index;
