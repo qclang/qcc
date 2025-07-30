@@ -52,6 +52,8 @@ int proc(char *data, size_t length) {
 		} else if(curr == '\n') {
 			++line;
 			line_beg = ++index;
+		} else if(curr == ' ' || curr == '\t') {
+			while(data[++index] == ' ' || data[index] == '\t');
 		} else if(curr == '\0') break;
 		else {
 			std::cerr << "Un-expected token at:" << line << ':' << index - line_beg + 1 << std::endl;
