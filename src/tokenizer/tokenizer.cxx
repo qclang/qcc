@@ -1,5 +1,5 @@
-#include <tokens.hxx>
-#include <tokenizer.hxx>
+#include <tokenizer/tokens.hxx>
+#include <tokenizer/tokenizer.hxx>
 #include <string>
 #include <cstring>
 
@@ -10,6 +10,10 @@ namespace Tokenizer {
 std::vector<Token> tokens;
 
 size_t index, line, line_beg;
+
+
+std::string readLine(char* data, size_t& index);
+
 
 Token readAlpNum(char* data, size_t& index);
 Token readNum(char* data, size_t& index);
@@ -25,7 +29,7 @@ void procSymbol(Token& arg);
 
 bool isSymbol(char* data, size_t& index);
 
-void proc(char *data, size_t length) {
+int proc(char *data, size_t length) {
 	index = line_beg = 0;
 	line = 1;
 	char curr, peek;
@@ -49,7 +53,25 @@ void proc(char *data, size_t length) {
 			++line;
 			line_beg = ++index;
 		} else if(curr == '\0') break;
+		else {
+			std::cerr << "Un-expected token at:" << line << ':' << index - line_beg + 1 << std::endl;
+			std::cout << readLine(data, line_beg) << std::endl;
+			return 1;
+		}
         }
+
+	return 0;
+}
+
+std::string readLine(char* data, size_t& index) {
+	std::string line;
+
+	while(data[index] != '\n' && data[index] != '\0')
+		line += data[index++];
+
+	++index;
+
+	return line;
 }
 
 void procAlpNum(Token& arg) {
