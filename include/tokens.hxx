@@ -41,9 +41,9 @@ typedef enum {
 	TOK_OP_EQEQ, // ==
 	TOK_OP_NEQ, // !=
 	TOK_OP_LT, // <
-	TOK_OP_GT, // >
+	TOK_OP_RT, // >
 	TOK_OP_LTE, // <=
-	TOK_OP_GTE, // >=
+	TOK_OP_RTE, // >=
 
 	TOK_OP_AND,      // &&
 	TOK_OP_OR,       // ||
