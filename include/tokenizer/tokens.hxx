@@ -39,9 +39,6 @@ typedef enum {
 	TOK_KEY_ENUM,
 	TOK_KEY_UNION,
 
-
-	TOK_KEY_SWAP,
-
 	TOK_DEL_PARANL,  // (
 	TOK_DEL_PARANR,  // )
 	TOK_DEL_CBRACL,  // {
@@ -74,7 +71,13 @@ typedef enum {
 	TOK_ASSIGN_XOR,   // ^=
 	TOK_ASSIGN_SHL,   // <<=
 	TOK_ASSIGN_SHR,   // >>=
+	TOK_ASSIGN_SWAP, /* <>
 
+				EXAMPLE:
+				qubit a=0, b=0;
+
+				<> a b
+			*/
 
 	TOK_OP_EQEQ, // ==
 	TOK_OP_NEQ, // !=
@@ -90,9 +93,9 @@ typedef enum {
 	TOK_OP_BIT_AND, // &
 	TOK_OP_BIT_OR, // |
 	TOK_OP_XOR, // ^
-	TOK_OP_NEG, // ~
-	TOK_OP_SHL, // <<
-	TOK_OP_SHR, // >>
+	TOK_NEG, // ~
+	TOK_SHL, // <<
+	TOK_SHR, // >>
 
 	TOK_COMMA,       // ,
 	TOK_DOT,         // .
