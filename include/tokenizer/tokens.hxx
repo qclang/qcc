@@ -49,13 +49,16 @@ typedef enum {
 	TOK_DEL_SBRACL,  // [
 	TOK_DEL_SBRACR,  // ]
 
-	TOK_SYM_EQ, // =
-	TOK_SYM_PLUS, // +
-	TOK_SYM_MINUS, // -
-	TOK_SYM_STAR, // *
-	TOK_SYM_SLASH, // /
-	TOK_SYM_COLON,  // :
-	TOK_SYM_SEMICOLON, // ;
+	TOK_EQ, // =
+	TOK_PLUS, // +
+	TOK_MINUS, // -
+	TOK_STAR, // *
+	TOK_SLASH, // /
+	TOK_COLON,  // :
+	TOK_SEMICOLON, // ;
+	TOK_MOD,         // %
+	TOK_QUESTION,    // ?
+
 
 	TOK_INC,         // ++
 	TOK_DEC,         // --
@@ -71,8 +74,6 @@ typedef enum {
 	TOK_ASSIGN_XOR,   // ^=
 	TOK_ASSIGN_SHL,   // <<=
 	TOK_ASSIGN_SHR,   // >>=
-	TOK_MOD,         // %
-	TOK_QUESTION,    // ?
 
 
 	TOK_OP_EQEQ, // ==
