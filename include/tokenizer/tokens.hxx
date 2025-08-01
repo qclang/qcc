@@ -20,6 +20,25 @@ typedef enum {
 	TOK_KEY_IF,
 	TOK_KEY_FOR,
 	TOK_KEY_WHILE,
+	TOK_KEY_ELSE,
+	TOK_KEY_DO,
+	TOK_KEY_SWITCH,
+	TOK_KEY_CASE,
+	TOK_KEY_DEFAULT,
+	TOK_KEY_BREAK,
+	TOK_KEY_CONTINUE,
+	TOK_KEY_GOTO,
+	TOK_KEY_SIZEOF,
+	TOK_KEY_TYPEDEF,
+	TOK_KEY_CONST,
+	TOK_KEY_VOLATILE,
+	TOK_KEY_EXTERN,
+	TOK_KEY_STATIC,
+	TOK_KEY_REGISTER,
+	TOK_KEY_INLINE,
+	TOK_KEY_ENUM,
+	TOK_KEY_UNION,
+
 
 	TOK_KEY_SWAP,
 
@@ -37,6 +56,24 @@ typedef enum {
 	TOK_SYM_SLASH, // /
 	TOK_SYM_COLON,  // :
 	TOK_SYM_SEMICOLON, // ;
+
+	TOK_INC,         // ++
+	TOK_DEC,         // --
+	TOK_ARROW,       // ->
+	TOK_ELLIPSIS,    // ...
+	TOK_ASSIGN_PLUS,  // +=
+	TOK_ASSIGN_MINUS, // -=
+	TOK_ASSIGN_MUL,   // *=
+	TOK_ASSIGN_DIV,   // /=
+	TOK_ASSIGN_MOD,   // %=
+	TOK_ASSIGN_AND,   // &=
+	TOK_ASSIGN_OR,    // |=
+	TOK_ASSIGN_XOR,   // ^=
+	TOK_ASSIGN_SHL,   // <<=
+	TOK_ASSIGN_SHR,   // >>=
+	TOK_MOD,         // %
+	TOK_QUESTION,    // ?
+
 
 	TOK_OP_EQEQ, // ==
 	TOK_OP_NEQ, // !=
