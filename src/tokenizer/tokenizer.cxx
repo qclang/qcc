@@ -37,29 +37,42 @@ int proc(char *data, size_t length) {
         while(index < length) {
 		curr = data[index];
 		peek = data[index + 1];
+		Token c_token;
+
                 if((curr <= 'Z' && curr >= 'A') || ('a' <= curr && curr <= 'z') || curr == '_') { // Identifiers/keyword must start with an alphabetic char
-			Token idtf = readAlpNum(data, index);
-			procAlpNum(idtf);
+			c_token = readAlpNum(data, index);
+			procAlpNum(c_token);
 		} else if(('0' <= curr && curr <= '9') || curr == '.') { // Number literal
-			Token num = readNum(data, index);
+			c_token = readNum(data, index);
 		} else if(curr == '\'') { // Character literal
-			Token c = readChar(data, index);
+			c_token = readChar(data, index);
 		} else if(curr == '"') { // String literal
-			Token s = readString(data, index);
+			c_token = readString(data, index);
 		} else if(isSymbol(data, index)) {
-			Token s = readSymbol(data, index);
-			procSymbol(s);
-		} else if(curr == '\n') {
-			++line;
-			line_beg = ++index;
-		} else if(curr == ' ' || curr == '\t') {
-			while(data[++index] == ' ' || data[index] == '\t');
-		} else if(curr == '\0') break;
-		else {
+			c_token = readSymbol(data, index);
+			procSymbol(c_token);
+		} else if(curr == '\n' || curr == ' ' || curr == '\t') {
+			size_t start_col = line_beg - index + 1, start_index = index;
+			while(data[index] == ' ' || data[index] == '\t' || data[index] == '\n')
+				if(data[index++] == '\n') {
+					++line;
+					line_beg = index;
+				}
+
+			c_token.ttype = Tokens::TOK_SPACE;
+                        c_token.line = line;
+                        c_token.column = start_col;
+                        c_token.startOffset = start_index;
+			c_token.endOffset = index;
+		} else if(curr == '\0') {
+			return 0;
+			break;
+		} else {
 			std::cerr << "Un-expected token at:" << line << ':' << index - line_beg + 1 << std::endl;
 			std::cout << readLine(data, line_beg) << std::endl;
 			return 1;
 		}
+		Tokenizer::tokens.push_back(c_token);
         }
 
 	return 0;
