@@ -209,11 +209,13 @@ void procSymbol(Token& arg) {
 	else if(name == "^")
                 type = Tokens::TOK_OP_XOR;
 	else if(name == "~")
-                type = Tokens::TOK_OP_NEG;
+                type = Tokens::TOK_NEG;
 	else if(name == "<<")
-		type = Tokens::TOK_OP_SHL;
+		type = Tokens::TOK_SHL;
 	else if(name == ">>")
-                type = Tokens::TOK_OP_SHR;
+                type = Tokens::TOK_SHR;
+        else if(name == "<>")
+                type = Tokens::TOK_ASSIGN_SWAP;
 	else if(name == ",")
                 type = Tokens::TOK_COMMA;
 	else if(name == ".")
@@ -401,6 +403,11 @@ Token readSymbol(char* data, size_t& index) {
 		tok.line += data[index++];
 		++tok.endOffset;
 	}
+
+	if(isSymbol(data, ++index)) {
+                tok.line += data[index++];
+                ++tok.endOffset;
+        }
 
 	return tok;
 }
