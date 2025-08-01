@@ -108,6 +108,42 @@ void procAlpNum(Token& arg) {
 		type = Tokens::TOK_KEY_WHILE;
 	else if(name == "return")
 		type == Tokens::TOK_KEY_RETURN;
+	else if(name == "else")
+                type == Tokens::TOK_KEY_ELSE;
+        else if(name == "do")
+                type == Tokens::TOK_KEY_DO;
+        else if(name == "switch")
+                type == Tokens::TOK_KEY_SWITCH;
+        else if(name == "case")
+                type == Tokens::TOK_KEY_CASE;
+        else if(name == "default")
+                type == Tokens::TOK_KEY_DEFAULT;
+        else if(name == "break")
+                type == Tokens::TOK_KEY_BREAK;
+        else if(name == "continue")
+                type == Tokens::TOK_KEY_CONTINUE;
+        else if(name == "goto")
+                type == Tokens::TOK_KEY_GOTO;
+        else if(name == "sizeof")
+                type == Tokens::TOK_KEY_SIZEOF;
+        else if(name == "typedef")
+                type == Tokens::TOK_KEY_TYPEDEF;
+        else if(name == "const")
+                type == Tokens::TOK_KEY_CONST;
+        else if(name == "volatile")
+                type == Tokens::TOK_KEY_VOLATILE;
+        else if(name == "extern")
+                type == Tokens::TOK_KEY_EXTERN;
+        else if(name == "static")
+                type == Tokens::TOK_KEY_STATIC;
+        else if(name == "register")
+                type == Tokens::TOK_KEY_REGISTER;
+        else if(name == "inline")
+                type == Tokens::TOK_KEY_INLINE;
+        else if(name == "enum")
+                type == Tokens::TOK_KEY_ENUM;
+        else if(name == "union")
+                type == Tokens::TOK_KEY_UNION;
 	else type = Tokens::TOK_IDENTIFIER;
 
 	arg.ttype = type;
@@ -131,19 +167,23 @@ void procSymbol(Token& arg) {
 	else if(name == "]")
                 type = Tokens::TOK_DEL_SBRACR;
 	else if(name == "=")
-		type = Tokens::TOK_SYM_EQ;
+		type = Tokens::TOK_EQ;
 	else if(name == "+")
-                type = Tokens::TOK_SYM_PLUS;
+                type = Tokens::TOK_PLUS;
 	else if(name == "-")
-                type = Tokens::TOK_SYM_MINUS;
+                type = Tokens::TOK_MINUS;
 	else if(name == "*")
-                type = Tokens::TOK_SYM_STAR;
+                type = Tokens::TOK_STAR;
 	else if(name == "/")
-                type = Tokens::TOK_SYM_SLASH;
+                type = Tokens::TOK_SLASH;
 	else if(name == ":")
-                type = Tokens::TOK_SYM_COLON;
+                type = Tokens::TOK_COLON;
 	else if(name == ";")
-                type = Tokens::TOK_SYM_SEMICOLON;
+                type = Tokens::TOK_SEMICOLON;
+        else if(name == "%")
+                type = Tokens::TOK_MOD;
+        else if(name == "?")
+                type = Tokens::TOK_QUESTION;
 	else if(name == "==")
                 type = Tokens::TOK_OP_EQEQ;
 	else if(name == "!=")
@@ -178,6 +218,34 @@ void procSymbol(Token& arg) {
                 type = Tokens::TOK_COMMA;
 	else if(name == ".")
                 type = Tokens::TOK_DOT;
+	else if(name == "++")
+		type = Tokens::TOK_INC;
+        else if(name == "--")
+                type = Tokens::TOK_DEC;
+        else if(name == "->")
+                type = Tokens::TOK_ARROW;
+        else if(name == "...")
+                type = Tokens::TOK_ELLIPSIS;
+        else if(name == "+=")
+                type = Tokens::TOK_ASSIGN_PLUS;
+        else if(name == "-=")
+                type = Tokens::TOK_ASSIGN_MINUS;
+        else if(name == "*=")
+                type = Tokens::TOK_ASSIGN_MUL;
+        else if(name == "/=")
+                type = Tokens::TOK_ASSIGN_DIV;
+        else if(name == "%=")
+                type = Tokens::TOK_ASSIGN_MOD;
+        else if(name == "&=")
+                type = Tokens::TOK_ASSIGN_AND;
+        else if(name == "|=")
+                type = Tokens::TOK_ASSIGN_OR;
+        else if(name == "^=")
+                type = Tokens::TOK_ASSIGN_XOR;
+        else if(name == "<<=")
+                type = Tokens::TOK_ASSIGN_SHL;
+        else if(name == ">>=")
+                type = Tokens::TOK_ASSIGN_SHR;
 
 	arg.ttype = type;
 };
