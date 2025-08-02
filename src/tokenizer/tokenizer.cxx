@@ -2,19 +2,20 @@
 #include <tokenizer/tokenizer.hxx>
 #include <string>
 #include <cstring>
+#include <cstdint>
 #include <cctype>
 
 #include <iostream>
 
 namespace Tokenizer {
 
-std::vector<Token> tokens;
-
 size_t line, line_beg;
 
+std::istream  *_input_stream;
+std::ostream *_output_stream;
 
 std::string readLine(std::istream &in);
-
+void _write_to_output(Token& t);
 
 Token readAlpNum(std::istream &in);
 Token readNum(std::istream &in);
@@ -30,7 +31,17 @@ void procSymbol(Token& arg);
 
 bool isSymbol(const char &c);
 
-int proc(std::istream &in) {
+void use(std::istream &input_stream) {
+	_input_stream = &input_stream;
+}
+
+void use(std::ostream &output_stream) {
+	_output_stream = &output_stream;
+}
+
+int proc() {
+	std::istream& in = *_input_stream;
+
 	line_beg = 0;
 	line = 1;
 	char curr;
@@ -77,7 +88,8 @@ int proc(std::istream &in) {
 			std::cout << readLine(in) << std::endl;
 			return 1;
 		}
-		Tokenizer::tokens.push_back(c_token);
+
+		_write_to_output(c_token);
         }
 
 	return 0;
@@ -89,6 +101,18 @@ std::string readLine(std::istream &in) {
 	std::getline(in, line);
 
 	return line;
+}
+
+void _write_to_output(Token& t) {
+    uint32_t name_len = static_cast<uint32_t>(t.name.size());
+    _output_stream->write(reinterpret_cast<const char*>(&name_len), sizeof(name_len));
+    _output_stream->write(t.name.c_str(), name_len);
+
+    _output_stream->write(reinterpret_cast<const char*>(&t.ttype), sizeof(t.ttype));
+    _output_stream->write(reinterpret_cast<const char*>(&t.line), sizeof(t.line));
+    _output_stream->write(reinterpret_cast<const char*>(&t.column), sizeof(t.column));
+    _output_stream->write(reinterpret_cast<const char*>(&t.startOffset), sizeof(t.startOffset));
+    _output_stream->write(reinterpret_cast<const char*>(&t.endOffset), sizeof(t.endOffset));
 }
 
 void procAlpNum(Token& arg) {
