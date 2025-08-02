@@ -390,15 +390,73 @@ Token readString(std::istream& in) {
 Token readSymbol(std::istream& in) {
 	Token tok;
         tok.startOffset = tok.endOffset = in.tellg();
-        tok.name = std::string(1, in.get());
         tok.line = line;
         tok.column = tok.startOffset - line_beg + 1;
 
-	for(int i=0; i < 2; i++)
-		if(isSymbol(in.peek())) {
+	char p = in.get();
+        tok.name = std::string(1, p);
+
+	if(p == '+') {
+		p = in.peek();
+		switch(p) {
+			case '+':
+			case '=':
 			tok.name += in.get();
-			++tok.endOffset;
-		} else break;
+			break;
+		}
+	} else if(p == '-') {
+                p = in.peek();
+                switch(p) {
+                        case '-':
+			case '>':
+                        case '=':
+                        tok.name += in.get();
+                        break;
+                }
+        } else switch(p) {
+		case '*':
+		case '/':
+		case '%':
+		case '^':
+        	        p = in.peek();
+			if(p == '=')
+                        	tok.name += in.get();
+			break;
+		case '&':
+                        p = in.peek();
+                        if(p == '&' || p == '=')
+                                tok.name += in.get();
+                        break;
+                case '|':
+                        p = in.peek();
+                        if(p == '|' || p == '=')
+                                tok.name += in.get();
+                        break;
+		case '.':
+                        p = in.peek();
+                        if(p == '.') {
+                                tok.name += in.get();
+				if(p == '.')
+                                	tok.name += in.get();
+			}
+                        break;
+		case '<':
+                        p = in.peek();
+                        if(p == '<') {
+                                tok.name += in.get();
+                                if(p == '=')
+                                        tok.name += in.get();
+                        } else if(p == '>') tok.name += in.get();
+                        break;
+		case '>':
+                        p = in.peek();
+                        if(p == '>') {
+                                tok.name += in.get();
+                                if(p == '=')
+                                        tok.name += in.get();
+                        }
+                        break;
+        }
 
 	return tok;
 }
