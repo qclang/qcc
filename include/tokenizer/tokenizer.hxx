@@ -9,6 +9,8 @@ namespace Tokenizer {
 
 	extern std::vector<Token> tokens;
 
-	int proc(std::istream& in);
+	void use(std::istream &input_stream);
+	void use(std::ostream &output_stream);
 
+	int proc();
 }
