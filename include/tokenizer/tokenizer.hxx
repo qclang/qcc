@@ -9,6 +9,6 @@ namespace Tokenizer {
 
 	extern std::vector<Token> tokens;
 
-	int proc(char* data, size_t length);
+	int proc(std::istream& in);
 
 }
