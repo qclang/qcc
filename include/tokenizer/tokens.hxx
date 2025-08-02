@@ -110,8 +110,6 @@ struct Token {
 
 	std::string name;
 
-	int bits;
-
 	int line = 0;
 	int column = 0;
 	int startOffset = 0;
