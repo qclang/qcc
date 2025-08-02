@@ -76,11 +76,7 @@ int proc() {
 				curr = in.peek();
 			}
 
-			c_token.ttype = Tokens::TOK_SPACE;
-			c_token.line = line;
-			c_token.column = start_col;
-			c_token.startOffset = start_index;
-			c_token.endOffset = static_cast<size_t>(in.tellg());
+			continue;
 		} else if(curr == '\0') {
 			return 0;
 		} else {
