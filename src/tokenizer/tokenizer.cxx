@@ -2,6 +2,7 @@
 #include <tokenizer/tokenizer.hxx>
 #include <string>
 #include <cstring>
+#include <cctype>
 
 #include <iostream>
 
@@ -9,17 +10,17 @@ namespace Tokenizer {
 
 std::vector<Token> tokens;
 
-size_t index, line, line_beg;
+size_t line, line_beg;
 
 
-std::string readLine(char* data, size_t& index);
+std::string readLine(std::istream &in);
 
 
-Token readAlpNum(char* data, size_t& index);
-Token readNum(char* data, size_t& index);
-Token readChar(char* data, size_t& index);
-Token readString(char* data, size_t& index);
-Token readSymbol(char* data, size_t& index);
+Token readAlpNum(std::istream &in);
+Token readNum(std::istream &in);
+Token readChar(std::istream &in);
+Token readString(std::istream &in);
+Token readSymbol(std::istream &in);
 
 void procAlpNum(Token& arg);
 void procNum(Token& arg);
@@ -27,49 +28,53 @@ void procChar(Token& arg);
 void procString(Token& arg);
 void procSymbol(Token& arg);
 
-bool isSymbol(char* data, size_t& index);
+bool isSymbol(const char &c);
 
-int proc(char *data, size_t length) {
-	index = line_beg = 0;
+int proc(std::istream &in) {
+	line_beg = 0;
 	line = 1;
-	char curr, peek;
+	char curr;
 
-        while(index < length) {
-		curr = data[index];
-		peek = data[index + 1];
+        while(in && in.peek() != EOF) {
+		curr = in.peek();
 		Token c_token;
 
-                if((curr <= 'Z' && curr >= 'A') || ('a' <= curr && curr <= 'z') || curr == '_') { // Identifiers/keyword must start with an alphabetic char
-			c_token = readAlpNum(data, index);
+                if(std::isalnum(curr) || curr == '_') { // Identifiers/keyword must start with an alphabetic char or an '_' char
+			c_token = readAlpNum(in);
 			procAlpNum(c_token);
-		} else if(('0' <= curr && curr <= '9') || curr == '.') { // Number literal
-			c_token = readNum(data, index);
+		} else if(std::isxdigit(curr) || curr == '.') { // Number literal
+			c_token = readNum(in);
 		} else if(curr == '\'') { // Character literal
-			c_token = readChar(data, index);
+			c_token = readChar(in);
 		} else if(curr == '"') { // String literal
-			c_token = readString(data, index);
-		} else if(isSymbol(data, index)) {
-			c_token = readSymbol(data, index);
+			c_token = readString(in);
+		} else if(isSymbol(curr)) {
+			c_token = readSymbol(in);
 			procSymbol(c_token);
 		} else if(curr == '\n' || curr == ' ' || curr == '\t') {
-			size_t start_col = line_beg - index + 1, start_index = index;
-			while(data[index] == ' ' || data[index] == '\t' || data[index] == '\n')
-				if(data[index++] == '\n') {
+			size_t start_index = static_cast<size_t>(in.tellg());
+			size_t start_col = start_index - line_beg + 1;
+			int curr = in.peek();
+
+			while (curr == ' ' || curr == '\t' || curr == '\n') {
+				in.get();
+				if (curr == '\n') {
 					++line;
-					line_beg = index;
+					line_beg = static_cast<size_t>(in.tellg());
 				}
+				curr = in.peek();
+			}
 
 			c_token.ttype = Tokens::TOK_SPACE;
-                        c_token.line = line;
-                        c_token.column = start_col;
-                        c_token.startOffset = start_index;
-			c_token.endOffset = index;
+			c_token.line = line;
+			c_token.column = start_col;
+			c_token.startOffset = start_index;
+			c_token.endOffset = static_cast<size_t>(in.tellg());
 		} else if(curr == '\0') {
 			return 0;
-			break;
 		} else {
-			std::cerr << "Un-expected token at:" << line << ':' << index - line_beg + 1 << std::endl;
-			std::cout << readLine(data, line_beg) << std::endl;
+			std::cerr << "Un-expected token at " << line << ':' << static_cast<size_t>(in.tellg()) - line_beg + 1 << std::endl;
+			std::cout << readLine(in) << std::endl;
 			return 1;
 		}
 		Tokenizer::tokens.push_back(c_token);
@@ -78,13 +83,10 @@ int proc(char *data, size_t length) {
 	return 0;
 }
 
-std::string readLine(char* data, size_t& index) {
+std::string readLine(std::istream &in) {
 	std::string line;
 
-	while(data[index] != '\n' && data[index] != '\0')
-		line += data[index++];
-
-	++index;
+	std::getline(in, line);
 
 	return line;
 }
@@ -107,43 +109,43 @@ void procAlpNum(Token& arg) {
 	else if(name == "while")
 		type = Tokens::TOK_KEY_WHILE;
 	else if(name == "return")
-		type == Tokens::TOK_KEY_RETURN;
+		type = Tokens::TOK_KEY_RETURN;
 	else if(name == "else")
-                type == Tokens::TOK_KEY_ELSE;
+                type = Tokens::TOK_KEY_ELSE;
         else if(name == "do")
-                type == Tokens::TOK_KEY_DO;
+                type = Tokens::TOK_KEY_DO;
         else if(name == "switch")
-                type == Tokens::TOK_KEY_SWITCH;
+                type = Tokens::TOK_KEY_SWITCH;
         else if(name == "case")
-                type == Tokens::TOK_KEY_CASE;
+                type = Tokens::TOK_KEY_CASE;
         else if(name == "default")
-                type == Tokens::TOK_KEY_DEFAULT;
+                type = Tokens::TOK_KEY_DEFAULT;
         else if(name == "break")
-                type == Tokens::TOK_KEY_BREAK;
+                type = Tokens::TOK_KEY_BREAK;
         else if(name == "continue")
-                type == Tokens::TOK_KEY_CONTINUE;
+                type = Tokens::TOK_KEY_CONTINUE;
         else if(name == "goto")
-                type == Tokens::TOK_KEY_GOTO;
+                type = Tokens::TOK_KEY_GOTO;
         else if(name == "sizeof")
-                type == Tokens::TOK_KEY_SIZEOF;
+                type = Tokens::TOK_KEY_SIZEOF;
         else if(name == "typedef")
-                type == Tokens::TOK_KEY_TYPEDEF;
+                type = Tokens::TOK_KEY_TYPEDEF;
         else if(name == "const")
-                type == Tokens::TOK_KEY_CONST;
+                type = Tokens::TOK_KEY_CONST;
         else if(name == "volatile")
-                type == Tokens::TOK_KEY_VOLATILE;
+                type = Tokens::TOK_KEY_VOLATILE;
         else if(name == "extern")
-                type == Tokens::TOK_KEY_EXTERN;
+                type = Tokens::TOK_KEY_EXTERN;
         else if(name == "static")
-                type == Tokens::TOK_KEY_STATIC;
+                type = Tokens::TOK_KEY_STATIC;
         else if(name == "register")
-                type == Tokens::TOK_KEY_REGISTER;
+                type = Tokens::TOK_KEY_REGISTER;
         else if(name == "inline")
-                type == Tokens::TOK_KEY_INLINE;
+                type = Tokens::TOK_KEY_INLINE;
         else if(name == "enum")
-                type == Tokens::TOK_KEY_ENUM;
+                type = Tokens::TOK_KEY_ENUM;
         else if(name == "union")
-                type == Tokens::TOK_KEY_UNION;
+                type = Tokens::TOK_KEY_UNION;
 	else type = Tokens::TOK_IDENTIFIER;
 
 	arg.ttype = type;
@@ -252,58 +254,57 @@ void procSymbol(Token& arg) {
 	arg.ttype = type;
 };
 
-Token readAlpNum(char* data, size_t& index) {
-	size_t end=index;
-	while((data[end] <= 'Z' && data[end] >= 'A') || (data[end] <= 'z' && data[end] >= 'a') || (data[end] <= '9' && data[end] >= '0') || data[end] == '_')
-		++end;
-	size_t len = end - index + 1;
+Token readAlpNum(std::istream &in) {
+	size_t start_index=in.tellg();
 
-	char *buff = new char[len + 1];
-	std::memcpy(buff, &data[index], len);
-	buff[len] = '\0';
-	std::string ret =  buff;
-	delete[] buff;
+	std::string ret;
+
+	int curr = in.peek();
+	while(std::isalnum(curr) || curr == '_') {
+		ret += static_cast<char>(in.get());
+		curr = in.peek();
+	}
 
 	Token tok;
 	tok.name = ret;
 	tok.line = line;
-	tok.column = end - line_beg + 1;
-	tok.startOffset = index;
-	tok.endOffset = end;
+	tok.endOffset = start_index + ret.size();
+	tok.column = tok.endOffset - line_beg + 1;
+	tok.startOffset = start_index;
 
-	index=end;
 	return tok;
 }
 
-Token readNum(char* data, size_t& index) {
-        size_t end=index;
-        while((data[end] <= '9' && data[end] >= '0') || data[end] == '_' || data[end] == '.')
-                ++end;
-        size_t len = end - index + 1;
+Token readNum(std::istream& in) {
+	size_t start_index=in.tellg();
 
-        char *buff = new char[len + 1];
-        std::memcpy(buff, &data[index], len);
-	buff[len] = '\0';
-        std::string ret = buff;
-	delete[] buff;
+        std::string ret;
 
-	Token tok;
-	tok.name = ret;
+        int curr = in.peek();
+        while(std::isxdigit(curr) || curr == '.' || curr == '_') {
+		if(curr == '_') continue;
+                ret += static_cast<char>(in.get());
+                curr = in.peek();
+        }
+
+        Token tok;
+        tok.name = ret;
         tok.line = line;
-        tok.column = end - line_beg + 1;
-        tok.startOffset = index;
-        tok.endOffset = end;
+        tok.endOffset = start_index + ret.size();
+        tok.column = tok.endOffset - line_beg + 1;
+        tok.startOffset = start_index;
 	tok.ttype = Tokens::TOK_NUMBER_LITERAL;
 
-	index=end;
-	return tok;
-}
+        return tok;}
 
-Token readChar(char* data, size_t& index) {
-	size_t end = ++index;
-	char c;
-	if(data[end] == '\\') {
-		switch(++end) {
+Token readChar(std::istream& in) {
+	size_t start_index = in.tellg();
+	in.get();
+	char c = in.peek();
+	if(c == '\\') {
+		in.get();
+		c = in.peek();
+		switch(c) {
 			case 'n':
 				c =  '\n';
 				break;
@@ -320,101 +321,89 @@ Token readChar(char* data, size_t& index) {
                                 c = '\'';
 				break;
 		}
-	} else c = data[end];
+	}
+	in.get();
 
 	Token tok;
-	tok.name = c;
+	std::string(1, static_cast<char>(c));
         tok.line = line;
-        tok.column = end - line_beg + 1;
-        tok.startOffset = index;
-        tok.endOffset = end;
+        tok.column = static_cast<size_t>(in.tellg()) - line_beg + 1;
+        tok.startOffset = start_index;
+        tok.endOffset = static_cast<size_t>(in.tellg());
 	tok.ttype = Tokens::TOK_CHAR_LITERAL;
 
-	index=end;
 	return tok;
 }
 
-Token readString(char* data, size_t& index) {
-	size_t end=++index;
-	while(data[end] != '"') ++end;
+Token readString(std::istream& in) {
+	size_t start_index = static_cast<size_t>(in.tellg());
+	std::string ret;
 
-	size_t len = end - index + 1;
-	end=index;
+	in.get(); // opening '"'
 
-	while(data[end] != '"')
-		if(data[end++] == '\\')
-			--len;
+	while (true) {
+	int ch = in.get();
+	if (ch == EOF || ch == '"') break;
 
-	end=index;
-
-	size_t pad=0;
-	char *buff = new char[len + 1];
-
-	while(data[end] != '"' && data[end] != '\0') {
-		size_t _pos = end - index - pad;
-		if(data[index] == '\\') {
-			++pad;
-	                switch(++index) {
-                        	case 'n':
-                	                buff[_pos] = '\n';
-					break;
-        	                case 't':
-	                                buff[_pos] = '\t';
-					break;
-                        	case '0':
-                	                buff[_pos] =  '\0';
-					break;
-				case '\\':
-                                        buff[_pos] =  '\\';
-					break;
-				case '"':
-					buff[_pos] = '"';
-					break;
-        	        }
-	        } else buff[_pos] = data[index];
-		++index;
+	if (ch == '\\') {
+		ch = in.get(); // next escaped char
+		switch (ch) {
+			case 'n':
+				ret += '\n';
+				break;
+			case 't':
+				ret += '\t';
+				break;
+			case '0':
+				ret += '\0';
+				break;
+			case '\\':
+				ret += '\\';
+				break;
+			case '"':
+				ret += '"';
+				break;
+			default:
+				ret += '\\';
+				if (ch != EOF) ret += static_cast<char>(ch);
+				break;
+			}
+		} else {
+			ret += static_cast<char>(ch);
+		}
 	}
 
-	buff[len] = '\0';
-        std::string ret =  buff;
-	delete[] buff;
-
+	size_t end_index = static_cast<size_t>(in.tellg());
 
 	Token tok;
 	tok.name = ret;
-        tok.line = line;
-        tok.column = end - line_beg + 1;
-        tok.startOffset = index;
-        tok.endOffset = end;
+	tok.line = line;
+	tok.column = start_index - line_beg + 1;
+	tok.startOffset = start_index;
+	tok.endOffset = end_index;
 	tok.ttype = Tokens::TOK_STRING_LITERAL;
 
-	index=end;
 	return tok;
 }
 
-Token readSymbol(char* data, size_t& index) {
+
+Token readSymbol(std::istream& in) {
 	Token tok;
-        tok.name = data[index];
+        tok.startOffset = tok.endOffset = in.tellg();
+        tok.name = std::string(1, in.get());
         tok.line = line;
-        tok.column = index - line_beg + 1;
-        tok.startOffset = tok.endOffset = index;
+        tok.column = tok.startOffset - line_beg + 1;
 
-	if(isSymbol(data, ++index)) {
-		tok.line += data[index++];
-		++tok.endOffset;
-	}
-
-	if(isSymbol(data, ++index)) {
-                tok.line += data[index++];
-                ++tok.endOffset;
-        }
+	for(int i=0; i < 2; i++)
+		if(isSymbol(in.peek())) {
+			tok.name += in.get();
+			++tok.endOffset;
+		} else break;
 
 	return tok;
 }
 
-bool isSymbol(char* data, size_t& index) {
-	char& c = data[index],
-		p = data[index + 1];
+bool isSymbol(const char &c) {
 	switch(c) {
 		case '(':
 		case ')':
