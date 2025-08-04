@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <string>
+#include <iostream>
 
 namespace Tokens {
 
@@ -116,3 +117,6 @@ struct Token {
 	bool isSynthetic = false;
 
 };
+
+std::istream& operator>>(std::istream& in, Token& t);
+std::ostream& operator<<(std::ostream& out, Token& t);
