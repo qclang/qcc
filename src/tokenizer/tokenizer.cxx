@@ -52,7 +52,7 @@ int proc() {
                 if(std::isalnum(curr) || curr == '_') { // Identifiers/keyword must start with an alphabetic char or an '_' char
 			c_token = readAlpNum(in);
 			procAlpNum(c_token);
-		} else if(std::isxdigit(curr) || curr == '.') { // Number literal
+		} else if(std::isdigit(curr) || curr == '.') { // Number literal
 			c_token = readNum(in);
 		} else if(curr == '\'') { // Character literal
 			c_token = readChar(in);
