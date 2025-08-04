@@ -1,5 +1,9 @@
 #/bin/sh
 
-srcs=$(find src/ -type f | grep -E "[.]c(xx|pp)?$")
+arg="$1"
 
-g++ -std=c++17 -I./include $srcs -o bin/program
+if [ "$arg" == "tok" ] || [ -z $arg ]; then
+	srcs="programs/tokenizer.cxx "
+	srcs+=$(find src/tokenizer/ | grep -E "[.]c(xx|pp)$")
+	g++ -std=c++17 -I./include $srcs -o bin/program
+fi
