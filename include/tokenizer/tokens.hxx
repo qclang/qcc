@@ -118,5 +118,5 @@ struct Token {
 
 };
 
-std::istream& operator>>(std::istream& in, Token& t);
-std::ostream& operator<<(std::ostream& out, Token& t);
+std::istream* operator>>(std::istream* in, Token &t);
+std::ostream* operator<<(std::ostream* out, Token &t);
