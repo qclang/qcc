@@ -18,6 +18,7 @@ int main(int argc, char* argv[]) {
 						delete fin;
 						return 1;
 					}
+					in = fin;
 				}
 			} else {
 				std::cerr << "File path not given after '-F' option" << std::endl;
