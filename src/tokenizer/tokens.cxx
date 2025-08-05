@@ -1,12 +1,14 @@
 #include<tokenizer/tokens.hxx>
 #include<cstdint>
+#include<vector>
 
 std::istream* operator>>(std::istream *in, Token &t) {
 	uint32_t name_len;
 	in->read(reinterpret_cast<char*>(&name_len), sizeof(name_len));
-	char name[name_len];
-	in->read(name, name_len);
-	t.name = name;
+
+	std::vector<char> buffer(name_len);
+	in->read(buffer.data(), name_len);
+	t.name.assign(buffer.data(), name_len);
 
 	in->read(reinterpret_cast<char*>(&t.ttype), sizeof(t.ttype));
         in->read(reinterpret_cast<char*>(&t.line), sizeof(t.line));
