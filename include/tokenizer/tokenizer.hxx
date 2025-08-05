@@ -1,6 +1,6 @@
 #pragma once
 
-#include<istream>
+#include<iostream>
 #include<tokenizer/tokens.hxx>
 
 namespace Tokenizer {
