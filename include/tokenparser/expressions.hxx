@@ -1,5 +1,6 @@
 #include <string>
 #include <memory>
+#include <vector>
 
 enum class OPE {
 	ADD,
@@ -82,9 +83,89 @@ struct VariableExpression : public Expression {
         void accept(ExpressionVisitor& v) override;
 };
 
+struct Statement {
+	virtual ~Statement() = default;
+	virtual void accept(ExpressionVisitor& v) = 0;
+};
+
+struct DeclarationStatement : Statement {
+	std::string name;
+	Expression& initializer;
+
+	void accept(ExpressionVisitor& v) override;
+};
+
+struct AssignmentStatement : Statement {
+	std::string name;
+	Expression& value;
+
+	void accept(ExpressionVisitor& v) override;
+};
+
+struct BlockStatement : public Statement {
+	std::vector<std::shared_ptr<Statement>> childs;
+
+	void accept(ExpressionVisitor& v) override;
+};
+
+struct ExpressionStatement : public Statement {
+	Expression& expr;
+	ExpressionStatement(Expression& expr) : expr(expr) {};
+
+	void accept(ExpressionVisitor& v) override;
+};
+
+struct IfStatement : public Statement {
+	Expression& condition;
+	Statement& body;
+
+	void accept(ExpressionVisitor& v) override;
+};
+
+struct WhileStatement : public IfStatement {
+	bool atleastonce = false; // If true, process it like do-while
+
+	void accept(ExpressionVisitor& v) override;
+};
+
+struct ForStatement : public Statement {
+	Statement& init;
+	Expression& condition;
+	Statement& update;
+	Statement& body;
+
+	void accept(ExpressionVisitor& v) override;
+};
+
+struct FunctionStatement : public Statement {
+	std::string returnType;
+	std::string name;
+	std::vector<std::pair<std::string, std::string>> parameters;
+	Statement* body;
+
+	void accept(ExpressionVisitor& v) override;
+};
+
+struct ReturnStatement : public Statement {
+	Expression& expr;
+
+
+	void accept(ExpressionVisitor& v) override;
+};
+
 struct ExpressionVisitor {
 	virtual void visit(BinaryExpression &e) = 0;
 	virtual void visit(UnaryExpression &e) = 0;
 	virtual void visit(LiteralExpression &e) = 0;
 	virtual void visit(VariableExpression &e) = 0;
+
+	virtual void visit(DeclarationStatement &s) = 0;
+	virtual void visit(AssignmentStatement &s) = 0;
+	virtual void visit(BlockStatement &s) = 0;
+	virtual void visit(ExpressionStatement &s) = 0;
+	virtual void visit(IfStatement &s) = 0;
+	virtual void visit(WhileStatement &s) = 0;
+	virtual void visit(ForStatement &s) = 0;
+	virtual void visit(FunctionStatement &s) = 0;
+	virtual void visit(ReturnStatement &s) = 0;
 };
