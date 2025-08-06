@@ -9,3 +9,13 @@ void BinaryExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
 void UnaryExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
 void LiteralExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
 void VariableExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
+
+void DeclarationStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
+void AssignmentStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
+void BlockStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
+void ExpressionStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
+void IfStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
+void WhileStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
+void ForStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
+void FunctionStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
+void ReturnStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
