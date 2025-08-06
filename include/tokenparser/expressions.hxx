@@ -1,4 +1,5 @@
 #include <string>
+#include <memory>
 
 enum class OPE {
 	ADD,
@@ -52,25 +53,33 @@ struct BinaryExpression : public Expression {
 	OPE op;
 
 	BinaryExpression(ExprPtr left, OPE op, ExprPtr right);
+
+	void accept(ExpressionVisitor& v) override;
 };
 
 struct UnaryExpression : public Expression {
         ExprPtr te;
         OPE op;
 
-        BinaryExpression(ExprPtr te, OPE op);
+        UnaryExpression(ExprPtr te, OPE op);
+
+        void accept(ExpressionVisitor& v) override;
 };
 
 struct LiteralExpression : public Expression {
 	std::string value;
 
 	LiteralExpression(std::string value);
+
+        void accept(ExpressionVisitor& v) override;
 };
 
 struct VariableExpression : public Expression {
 	std::string name;
 
 	VariableExpression(std::string name);
+
+        void accept(ExpressionVisitor& v) override;
 };
 
 struct ExpressionVisitor {
