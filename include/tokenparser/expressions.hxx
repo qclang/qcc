@@ -88,6 +88,8 @@ struct Statement {
 	virtual void accept(ExpressionVisitor& v) = 0;
 };
 
+using StmPtr = std::shared_ptr<Statement>;
+
 struct DeclarationStatement : Statement {
 	std::string type_name;
 	ExprPtr sizer, initializer;
@@ -103,7 +105,7 @@ struct AssignmentStatement : Statement {
 };
 
 struct BlockStatement : public Statement {
-	std::vector<std::shared_ptr<Statement>> childs;
+	std::vector<std::shared_ptr<StmPtr>> childs;
 
 	void accept(ExpressionVisitor& v) override;
 };
@@ -117,7 +119,7 @@ struct ExpressionStatement : public Statement {
 
 struct IfStatement : public Statement {
 	ExprPtr condition;
-	Statement& body;
+	StmPtr body;
 
 	void accept(ExpressionVisitor& v) override;
 };
@@ -129,10 +131,10 @@ struct WhileStatement : public IfStatement {
 };
 
 struct ForStatement : public Statement {
-	Statement& init;
+	StmPtr init;
 	ExprPtr condition;
-	Statement& update;
-	Statement& body;
+	StmPtr update;
+	StmPtr body;
 
 	void accept(ExpressionVisitor& v) override;
 };
@@ -141,7 +143,7 @@ struct FunctionStatement : public Statement {
 	std::string returnType;
 	std::string name;
 	std::vector<std::pair<std::string, std::string>> parameters;
-	Statement* body;
+	StmPtr body;
 
 	void accept(ExpressionVisitor& v) override;
 };
