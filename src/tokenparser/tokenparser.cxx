@@ -1,10 +1,11 @@
 #include <tokenparser/tokenparser.hxx>
+#include <tokenparser/expressions.hxx>
+#include <qcerrors.hxx>
 
 namespace Tokenparser {
 
 	std::istream  *_input_stream;
 	std::ostream *_output_stream;
-
 
 	void use(std::istream &input_stream) {
 	        _input_stream = &input_stream;
@@ -14,14 +15,70 @@ namespace Tokenparser {
 	        _output_stream = &output_stream;
 	}
 
-	int proc() {
-		while(_input_stream && _input_stream->peek() != EOF) {
-			Token c_token;
-			_input_stream >> c_token;
+	Token c_token;
 
-			*_output_stream << c_token.name << std::endl;
+	int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
+		if(c_token.ttype == ttype) {
+			_input_stream >> c_token;
+			return 1;
 		}
 
 		return 0;
+	};
+
+	int getSize(std::string s) {};
+
+	ExprPtr evalSquares() {} // eval array sizer or indexer
+
+	void evalDec() {} // Return declarationstatement
+
+	StmPtr evalFunc() {}
+
+	int proc(std::vector<StmPtr> &parent) {
+		while(_input_stream && _input_stream->peek() != EOF) {
+			_input_stream >> c_token;
+			std::string _name = c_token.name;
+
+			if(eat(Tokens::TOK_TYPE)) {
+				ExpPtr sizer;
+				sizer = eat(Tokens::TOK_DEL_SBRACL) ?
+					evalSquares() :
+					make_shared<LiteralExpression>(std::toString(getPSize(_name)));
+
+				bool isPtr= eat(Tokens::TOK_STAR);
+
+				if(eat(Tokens::TOK_IDENTIFIER)) {
+					
+					return 1;
+				}
+
+				if(eat(Tokens::TOK_PARANL)) {
+					evalFunc();
+					continue;
+				}
+
+				if(eat(Tokens::TOK_SEMICOLON))) {
+					
+					continue;
+				}
+
+				if(eat(Tokens::TOK_EQ)) {
+					//dec
+				}
+
+				if(eat(Tokens::TOK_COMMA)) {
+					evalDec();
+					contiune;
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	std::vector<StmPtr> main_block;
+
+	int proc() {
+		proc(main_block);
 	}
 }
