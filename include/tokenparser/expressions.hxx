@@ -89,8 +89,8 @@ struct Statement {
 };
 
 struct DeclarationStatement : Statement {
-	std::string name;
-	ExprPtr initializer;
+	std::string type_name;
+	ExprPtr sizer, initializer;
 
 	void accept(ExpressionVisitor& v) override;
 };
