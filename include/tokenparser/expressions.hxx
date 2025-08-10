@@ -112,7 +112,7 @@ struct BlockStatement : public Statement {
 
 struct ExpressionStatement : public Statement {
 	ExprPtr expr;
-	ExpressionStatement(Expression& expr) : expr(expr) {};
+	ExpressionStatement(ExprPtr& expr) : expr(expr) {};
 
 	void accept(ExpressionVisitor& v) override;
 };
