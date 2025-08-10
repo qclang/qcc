@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cstdint>
 #include <cctype>
-
+#include <qcerrors.hxx>
 #include <iostream>
 
 namespace Tokenizer {
@@ -78,11 +78,10 @@ int proc() {
 			continue;
 		} else if(curr == '\0') {
 			return 0;
-		} else {
-			std::cerr << "Un-expected token at " << line << ':' << static_cast<size_t>(in.tellg()) - line_beg + 1 << std::endl;
-			std::cout << readLine(in) << std::endl;
-			return 1;
-		}
+		} else return( unrecognizedTokenError("the file",
+						line,
+						static_cast<size_t>(in.tellg()) - line_beg + 1,
+						readLine(in)), 1);
 
 	_output_stream << c_token;
         }
