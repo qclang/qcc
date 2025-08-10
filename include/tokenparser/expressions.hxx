@@ -90,14 +90,14 @@ struct Statement {
 
 struct DeclarationStatement : Statement {
 	std::string name;
-	Expression& initializer;
+	ExprPtr initializer;
 
 	void accept(ExpressionVisitor& v) override;
 };
 
 struct AssignmentStatement : Statement {
 	std::string name;
-	Expression& value;
+	ExprPtr value;
 
 	void accept(ExpressionVisitor& v) override;
 };
@@ -109,14 +109,14 @@ struct BlockStatement : public Statement {
 };
 
 struct ExpressionStatement : public Statement {
-	Expression& expr;
+	ExprPtr expr;
 	ExpressionStatement(Expression& expr) : expr(expr) {};
 
 	void accept(ExpressionVisitor& v) override;
 };
 
 struct IfStatement : public Statement {
-	Expression& condition;
+	ExprPtr condition;
 	Statement& body;
 
 	void accept(ExpressionVisitor& v) override;
@@ -130,7 +130,7 @@ struct WhileStatement : public IfStatement {
 
 struct ForStatement : public Statement {
 	Statement& init;
-	Expression& condition;
+	ExprPtr condition;
 	Statement& update;
 	Statement& body;
 
@@ -147,7 +147,7 @@ struct FunctionStatement : public Statement {
 };
 
 struct ReturnStatement : public Statement {
-	Expression& expr;
+	ExprPtr expr;
 
 
 	void accept(ExpressionVisitor& v) override;
