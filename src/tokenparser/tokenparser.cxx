@@ -26,7 +26,7 @@ namespace Tokenparser {
 		return 0;
 	};
 
-	int getSize(std::string s) {};
+	int getPSize(std::string s) {};
 
 	ExprPtr evalSquares() {} // eval array sizer or indexer
 
@@ -40,10 +40,10 @@ namespace Tokenparser {
 			std::string _name = c_token.name;
 
 			if(eat(Tokens::TOK_TYPE)) {
-				ExpPtr sizer;
+				ExprPtr sizer;
 				sizer = eat(Tokens::TOK_DEL_SBRACL) ?
 					evalSquares() :
-					make_shared<LiteralExpression>(std::toString(getPSize(_name)));
+					make_shared<LiteralExpression>(std::to_string(getPSize(_name)));
 
 				bool isPtr= eat(Tokens::TOK_STAR);
 
@@ -52,12 +52,12 @@ namespace Tokenparser {
 					return 1;
 				}
 
-				if(eat(Tokens::TOK_PARANL)) {
+				if(eat(Tokens::TOK_DEL_PARANL)) {
 					evalFunc();
 					continue;
 				}
 
-				if(eat(Tokens::TOK_SEMICOLON))) {
+				if(eat(Tokens::TOK_SEMICOLON)) {
 					
 					continue;
 				}
@@ -68,7 +68,7 @@ namespace Tokenparser {
 
 				if(eat(Tokens::TOK_COMMA)) {
 					evalDec();
-					contiune;
+					continue;
 				}
 			}
 		}
