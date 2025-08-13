@@ -108,6 +108,7 @@ struct Token {
 	Tokens::Type ttype;
 
 	std::string name;
+	std::string file_name;
 
 	int line = 0;
 	int column = 0;
