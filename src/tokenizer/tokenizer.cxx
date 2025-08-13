@@ -6,13 +6,18 @@
 #include <cctype>
 #include <qcerrors.hxx>
 #include <iostream>
+#include <unordered_map>
 
 namespace Tokenizer {
 
 size_t line, line_beg;
 
+bool isSystem;
+
 std::istream  *_input_stream;
 std::ostream *_output_stream;
+
+std::string current_file;
 
 std::string readLine(std::istream &in);
 
@@ -49,7 +54,30 @@ int proc() {
 		curr = in.peek();
 		Token c_token;
 
-                if(std::isalnum(curr) || curr == '_') { // Identifiers/keyword must start with an alphabetic char or an '_' char
+                if(curr == '#') {
+			isSystem = false;
+			in.ignore();
+			in >> line;
+			in.ignore();
+
+			if(in.peek() == '"') {
+				in.ignore();
+				current_file = "";
+				while(in.peek() != '"')
+					current_file += in.get();
+				in.ignore();
+			}
+
+			while(in.peek() != '\n') {
+				int op;
+				in >> op;
+				// if(op == 1) std::cerr << "New file" << std::endl;
+				// if(op == 2) std::cerr << "Finished" << std::endl;
+				if(op == 3) isSystem = true;
+				// if(op == 4) std::cerr << "Extern 'C'" << std::endl;
+			};
+			in.ignore();
+		} else if(std::isalnum(curr) || curr == '_') { // Identifiers/keyword must start with an alphabetic char or an '_' char
 			c_token = readAlpNum(in);
 			procAlpNum(c_token);
 		} else if(std::isdigit(curr) || curr == '.') { // Number literal
