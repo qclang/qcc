@@ -37,10 +37,13 @@ int main(int argc, char *argv[]) {
                         in = arg;
                 }
         }
-	std::string cmd = getExecutableDir() + "/tokenizer ";
+
+	std::string cmd = "cc -E -x c ";
 
 	if(in != "")
-		cmd += in;
+                cmd += in + " | ";
+
+	cmd += getExecutableDir() + "/tokenizer ";
 
 	cmd +=  " | " + getExecutableDir() + "/tokenparser ";
 
