@@ -26,13 +26,19 @@ namespace Tokenparser {
 		return 0;
 	};
 
-	int getPSize(std::string s) {};
+	int getPSize(std::string s) {
+		return 0;
+	};
 
-	ExprPtr evalSquares() {} // eval array sizer or indexer
+	ExprPtr evalSquares() {
+		return nullptr;
+	} // eval array sizer or indexer
 
 	void evalDec() {} // Return declarationstatement
 
-	StmPtr evalFunc() {}
+	StmPtr evalFunc() {
+		return nullptr;
+	}
 
 	int proc(std::vector<StmPtr> &parent) {
 		while(_input_stream && _input_stream->peek() != EOF) {
@@ -43,7 +49,7 @@ namespace Tokenparser {
 				ExprPtr sizer;
 				sizer = eat(Tokens::TOK_DEL_SBRACL) ?
 					evalSquares() :
-					make_shared<LiteralExpression>(std::to_string(getPSize(_name)));
+					std::make_shared<LiteralExpression>(std::to_string(getPSize(_name)));
 
 				bool isPtr= eat(Tokens::TOK_STAR);
 
@@ -79,6 +85,6 @@ namespace Tokenparser {
 	std::vector<StmPtr> main_block;
 
 	int proc() {
-		proc(main_block);
+		return proc(main_block);
 	}
 }
