@@ -10,7 +10,7 @@ OBJS_TOKENIZER := $(patsubst %, $(BUILD)/%.o, $(SRCS_TOKENIZER:/=_))
 SRCS_TOKENPARSER := programs/tokenparser.cxx $(shell find src/tokenparser/ src/tokenizer/tokens.cxx -type f -regex '.*\.\(cxx\|cpp\)$$')
 OBJS_TOKENPARSER := $(patsubst %, $(BUILD)/%.o, $(SRCS_TOKENPARSER:/=_))
 
-.PHONY: all tok par
+.PHONY: all lexer parser qcc
 all: lexer parser qcc
 
 lexer: $(BIN)/tokenizer
