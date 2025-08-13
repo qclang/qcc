@@ -31,7 +31,7 @@ std::ostream* operator<<(std::ostream *out, Token &t) {
 	out->write(reinterpret_cast<const char*>(&name_len), sizeof(name_len));
 	out->write(t.name.c_str(), name_len);
 
-	uint32_t fname_len = static_cast<uint32_t>(t.name.size());
+	uint32_t fname_len = static_cast<uint32_t>(t.file_name.size());
         out->write(reinterpret_cast<const char*>(&fname_len), sizeof(fname_len));
         out->write(t.file_name.c_str(), fname_len);
 
