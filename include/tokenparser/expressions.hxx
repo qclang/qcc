@@ -2,6 +2,8 @@
 #include <memory>
 #include <vector>
 
+#include <tokenparser/typer.hxx>
+
 enum class OPE {
 	ADD,
 	SUB,
@@ -92,7 +94,7 @@ using StmPtr = std::shared_ptr<Statement>;
 
 struct DeclarationStatement : Statement {
 	std::string name;
-	std::string type_name;
+	Typer type_name;
 	ExprPtr sizer, initializer;
 
 	void accept(ExpressionVisitor& v) override;
@@ -141,7 +143,7 @@ struct ForStatement : public Statement {
 };
 
 struct FunctionStatement : public Statement {
-	std::string returnType;
+	Typer returnType;
 	std::string name;
 	std::vector<std::pair<std::string, std::string>> parameters;
 	StmPtr body;
