@@ -91,6 +91,7 @@ struct Statement {
 using StmPtr = std::shared_ptr<Statement>;
 
 struct DeclarationStatement : Statement {
+	std::string name;
 	std::string type_name;
 	ExprPtr sizer, initializer;
 
