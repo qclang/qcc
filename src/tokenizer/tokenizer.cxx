@@ -183,6 +183,8 @@ void procAlpNum(Token& arg) {
                 type = Tokens::TOK_KEY_ENUM;
         else if(name == "union")
                 type = Tokens::TOK_KEY_UNION;
+	else if(name == "quantum")
+                type = Tokens::TOK_KEY_QUANTUM;
 	else type = Tokens::TOK_IDENTIFIER;
 
 	arg.ttype = type;
