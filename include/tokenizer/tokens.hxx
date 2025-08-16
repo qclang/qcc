@@ -37,6 +37,7 @@ typedef enum {
 	TOK_KEY_INLINE,
 	TOK_KEY_ENUM,
 	TOK_KEY_UNION,
+	TOK_KEY_QUANTUM,
 
 	TOK_DEL_PARANL,  // (
 	TOK_DEL_PARANR,  // )
