@@ -37,7 +37,10 @@ typedef enum {
 	TOK_KEY_INLINE,
 	TOK_KEY_ENUM,
 	TOK_KEY_UNION,
-	TOK_KEY_QUANTUM,
+	TOK_KEY_QUANTUM, /*  Example:
+			  *  quantum byte = |0b101> + |0b011>
+			  *  quantum float = |.5f>
+			  */
 
 	TOK_DEL_PARANL,  // (
 	TOK_DEL_PARANR,  // )
@@ -74,9 +77,9 @@ typedef enum {
 	TOK_ASSIGN_SWAP, /* <>
 
 				EXAMPLE:
-				qubit a=0, b=0;
+				quantum bit a=0, b=0;
 
-				<> a b
+				a <> b // it would value of last right hand
 			*/
 
 	TOK_OP_EQEQ, // ==
