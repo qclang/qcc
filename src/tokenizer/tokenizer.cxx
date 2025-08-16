@@ -129,10 +129,13 @@ void procAlpNum(Token& arg) {
 	const std::string& name = arg.name;
 	Tokens::Type type;
 	if(name == "angle" ||
-		name == "qubit" ||
 		name == "bit" ||
+		name == "byte" ||
+		name == "short" ||
 		name == "int" ||
-		name == "float")
+		name == "float" ||
+		name == "double" ||
+		name == "long")
 		type = Tokens::TOK_TYPE;
 	else if(name == "struct")
 		type = Tokens::TOK_STRUCT;
