@@ -64,7 +64,7 @@ namespace Tokenparser {
 					std::cerr << "Warning! Declaration with multiple types, last one will be count!!" << std::endl;
 				c_typer.vtype = vtype;
 			}
-			else if(eat(Tokens::TOK_KEY_QUANTUMISED)
+			else if(eat(Tokens::TOK_KEY_QUANTUM))
 				c_typer.spec |= (1 << SPEC_QU);
 			else if(eat(Tokens::TOK_KEY_CONST))
 				c_typer.spec |= (1 << SPEC_CONST);
