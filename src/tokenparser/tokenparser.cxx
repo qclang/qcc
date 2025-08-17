@@ -26,9 +26,64 @@ namespace Tokenparser {
 		return 0;
 	};
 
+	VariableType getPVarT(const std::string& str) {
+		if(str == "angle")
+			return VAR_ANGLE;
+		else if(str == "bit")
+			return VAR_BIT;
+		else if(str == "char")
+			return VAR_CHAR;
+		else if(str == "short")
+			return VAR_SHORT;
+		else if(str == "int")
+			return VAR_INT;
+		else if(str == "float")
+			return VAR_FLOAT;
+		else if(str == "double")
+			return VAR_DOUBLE;
+		else if(str == "long")
+			return VAR_LONG;
+	}
+
+	Typer c_typer;
+	int eatTyper() {
+		c_typer.vtype = 0;
+		c_typer.spec = 0;
+		bool ret=true;
+		for(int i=0; i < SPEC_COUNT; i++) {
+			std::string _name=c_token.name;
+			if(eat(Tokens::TOK_TYPE)) {
+				--i;
+				VariableType vtype = getPVarT(_name);
+                                if(vtype == VAR_LONG) switch(c_typer.vtype) {
+					case VAR_LONG:
+					case VAR_DOUBLE:
+					case VAR_INT:
+						++c_typer.vtype;
+						continue;
+				}
+				if(c_typer.vtype)
+					std::cerr << "Warning! Declaration with multiple types, last one will be count!!" << std::endl;
+				c_typer.vtype = vtype;
+			}
+			else if(eat(Tokens::TOK_KEY_QUANTUMISED)
+				c_typer.spec |= (1 << SPEC_QU);
+			else if(eat(Tokens::TOK_KEY_CONST))
+				c_typer.spec |= (1 << SPEC_CONST);
+			else if(eat(Tokens::TOK_KEY_INLINE)
+				c_typer.spec |= (1 << SPEC_INL);
+			else if(eat(Tokens::TOK_KEY_EXTERN)
+				c_typer.spec |= (1 << SPEC_EXT);
+			else if(eat(Tokens::TOK_KEY_VOLATILE))
+				c_typer.spec |= (1 << SPEC_VOL);
+			else ret = false;
+		};
+		return ret;
+	};
+
 	int getPSize(std::string s) {
 		return 0;
-	};
+	}
 
 	ExprPtr evalSquares() {
 		return nullptr;
@@ -45,37 +100,8 @@ namespace Tokenparser {
 			_input_stream >> c_token;
 			std::string _name = c_token.name;
 
-			if(eat(Tokens::TOK_TYPE)) {
-				ExprPtr sizer;
-				sizer = eat(Tokens::TOK_DEL_SBRACL) ?
-					evalSquares() :
-					std::make_shared<LiteralExpression>(std::to_string(getPSize(_name)));
-
-				bool isPtr= eat(Tokens::TOK_STAR);
-
-				if(eat(Tokens::TOK_IDENTIFIER)) {
-					
-					return 1;
-				}
-
-				if(eat(Tokens::TOK_DEL_PARANL)) {
-					evalFunc();
-					continue;
-				}
-
-				if(eat(Tokens::TOK_SEMICOLON)) {
-					
-					continue;
-				}
-
-				if(eat(Tokens::TOK_EQ)) {
-					//dec
-				}
-
-				if(eat(Tokens::TOK_COMMA)) {
-					evalDec();
-					continue;
-				}
+			if(eatTyper()) {
+				//eatIdtf or throw error
 			}
 		}
 
