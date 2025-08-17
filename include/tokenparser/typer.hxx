@@ -4,12 +4,12 @@ typedef enum {
 	VAR_CHAR,
 	VAR_SHORT,
 	VAR_INT,
+	VAR_LINT,
 	VAR_FLOAT,
 	VAR_DOUBLE,
+	VAR_LDOUBLE,
 	VAR_LONG,
-
-
-	VAR_TYPES_COUNT
+	VAR_LLONG
 } VariableType;
 
 enum {
