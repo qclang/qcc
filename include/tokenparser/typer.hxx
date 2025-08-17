@@ -12,11 +12,15 @@ typedef enum {
 	VAR_TYPES_COUNT
 } VariableType;
 
+enum {
+	SPEC_QU = 0,
+	SPEC_CONST = 0b10,
+	SPEC_INL = 0b100,
+	SPEC_EXT = 0b1000,
+	SPEC_VOL = 0b10000
+};
+
 struct Typer {
 	VariableType vtype;
-        bool quantumised;
-        bool constant;
-        bool inlined;
-        bool external;
-        bool volatiled;
+	uint8_t spec;
 };
