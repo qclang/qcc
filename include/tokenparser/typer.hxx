@@ -14,10 +14,13 @@ typedef enum {
 
 enum {
 	SPEC_QU = 0,
-	SPEC_CONST = 0b10,
-	SPEC_INL = 0b100,
-	SPEC_EXT = 0b1000,
-	SPEC_VOL = 0b10000
+	SPEC_CONST,
+	SPEC_INL,
+	SPEC_EXT,
+	SPEC_VOL,
+
+
+	SPEC_COUNT
 };
 
 struct Typer {
