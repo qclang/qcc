@@ -59,6 +59,7 @@ namespace Tokenparser {
 					case VAR_INT:
 						++c_typer.vtype;
 						continue;
+					default: break;
 				}
 				if(c_typer.vtype)
 					std::cerr << "Warning! Declaration with multiple types, last one will be count!!" << std::endl;
