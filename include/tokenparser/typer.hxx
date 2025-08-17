@@ -1,5 +1,6 @@
 typedef enum {
-	VAR_ANGLE = 0,
+	VAR_UNDEFINED=0,
+	VAR_ANGLE,
 	VAR_BIT,
 	VAR_CHAR,
 	VAR_SHORT,

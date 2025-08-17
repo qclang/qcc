@@ -46,8 +46,8 @@ namespace Tokenparser {
 	}
 
 	int eatTyper(Typer c_typer) {
-		c_typer.vtype = 0;
-		c_typer.spec = 0;
+		c_typer.vtype = VAR_UNDEFINED;
+		c_typer.spec = char(0);
 		for(int i=0; i < SPEC_COUNT; i++) {
 			std::string _name=c_token.name;
 			if(eat(Tokens::TOK_TYPE)) {
