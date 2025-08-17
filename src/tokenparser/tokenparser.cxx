@@ -68,9 +68,9 @@ namespace Tokenparser {
 				c_typer.spec |= (1 << SPEC_QU);
 			else if(eat(Tokens::TOK_KEY_CONST))
 				c_typer.spec |= (1 << SPEC_CONST);
-			else if(eat(Tokens::TOK_KEY_INLINE)
+			else if(eat(Tokens::TOK_KEY_INLINE))
 				c_typer.spec |= (1 << SPEC_INL);
-			else if(eat(Tokens::TOK_KEY_EXTERN)
+			else if(eat(Tokens::TOK_KEY_EXTERN))
 				c_typer.spec |= (1 << SPEC_EXT);
 			else if(eat(Tokens::TOK_KEY_VOLATILE))
 				c_typer.spec |= (1 << SPEC_VOL);
