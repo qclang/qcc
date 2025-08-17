@@ -45,11 +45,9 @@ namespace Tokenparser {
 			return VAR_LONG;
 	}
 
-	Typer c_typer;
-	int eatTyper() {
+	int eatTyper(Typer c_typer) {
 		c_typer.vtype = 0;
 		c_typer.spec = 0;
-		bool ret=true;
 		for(int i=0; i < SPEC_COUNT; i++) {
 			std::string _name=c_token.name;
 			if(eat(Tokens::TOK_TYPE)) {
@@ -76,9 +74,9 @@ namespace Tokenparser {
 				c_typer.spec |= (1 << SPEC_EXT);
 			else if(eat(Tokens::TOK_KEY_VOLATILE))
 				c_typer.spec |= (1 << SPEC_VOL);
-			else ret = false;
+			else break;
 		};
-		return ret;
+		return c_typer.spec || c_typer.vtype;
 	};
 
 	int getPSize(std::string s) {
@@ -100,7 +98,8 @@ namespace Tokenparser {
 			_input_stream >> c_token;
 			std::string _name = c_token.name;
 
-			if(eatTyper()) {
+			Typer m_typer;
+			if(eatTyper(m_typer)) {
 				//eatIdtf or throw error
 			}
 		}
