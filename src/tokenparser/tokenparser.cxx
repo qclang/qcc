@@ -26,7 +26,7 @@ namespace Tokenparser {
 		return 0;
 	};
 
-	VariableType getPVarT(const std::string& str) {
+	uint8_t getPVarT(const std::string& str) {
 		if(str == "angle")
 			return VAR_ANGLE;
 		else if(str == "bit")
@@ -52,7 +52,7 @@ namespace Tokenparser {
 			std::string _name=c_token.name;
 			if(eat(Tokens::TOK_TYPE)) {
 				--i;
-				VariableType vtype = getPVarT(_name);
+				uint8_t vtype = getPVarT(_name);
                                 if(vtype == VAR_LONG) switch(c_typer.vtype) {
 					case VAR_LONG:
 					case VAR_DOUBLE:

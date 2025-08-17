@@ -1,4 +1,4 @@
-typedef enum {
+enum {
 	VAR_UNDEFINED=0,
 	VAR_ANGLE,
 	VAR_BIT,
@@ -11,7 +11,7 @@ typedef enum {
 	VAR_LDOUBLE,
 	VAR_LONG,
 	VAR_LLONG
-} VariableType;
+};
 
 enum {
 	SPEC_QU = 0,
@@ -25,6 +25,6 @@ enum {
 };
 
 struct Typer {
-	VariableType vtype;
+	uint8_t vtype;
 	uint8_t spec;
 };
