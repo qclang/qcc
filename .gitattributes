@@ -1,1 +1,1 @@
-build.sh linguist-vendored
+Makefile linguist-vendored
