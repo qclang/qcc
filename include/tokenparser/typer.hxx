@@ -1,3 +1,5 @@
+#include <memory>
+
 enum {
 	VAR_UNDEFINED=0,
 	VAR_ANGLE,
@@ -10,7 +12,8 @@ enum {
 	VAR_DOUBLE,
 	VAR_LDOUBLE,
 	VAR_LONG,
-	VAR_LLONG
+	VAR_LLONG,
+	VAR_POINTER
 };
 
 enum {
@@ -27,4 +30,5 @@ enum {
 struct Typer {
 	uint8_t vtype;
 	uint8_t spec;
+	std::shared_ptr<Typer> respect_ptr;
 };

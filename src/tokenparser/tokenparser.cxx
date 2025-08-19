@@ -45,39 +45,44 @@ namespace Tokenparser {
 			return VAR_LONG;
 	}
 
-	int eatTyper(Typer c_typer) {
-		c_typer.vtype = VAR_UNDEFINED;
-		c_typer.spec = char(0);
-		for(int i=0; i < SPEC_COUNT; i++) {
+	int eatTyper(std::shared_ptr<Typer>& c_typer) {
+		c_typer = std::make_shared<Typer>();
+		c_typer->vtype = VAR_UNDEFINED;
+		c_typer->spec = char(0);
+		while(1) {
 			std::string _name=c_token.name;
 			if(eat(Tokens::TOK_TYPE)) {
-				--i;
 				uint8_t vtype = getPVarT(_name);
-                                if(vtype == VAR_LONG) switch(c_typer.vtype) {
+                                if(vtype == VAR_LONG) switch(c_typer->vtype) {
 					case VAR_LONG:
 					case VAR_DOUBLE:
 					case VAR_INT:
-						++c_typer.vtype;
+						++c_typer->vtype;
 						continue;
 					default: break;
 				}
-				if(c_typer.vtype)
+				if(c_typer->vtype)
 					std::cerr << "Warning! Declaration with multiple types, last one will be count!!" << std::endl;
-				c_typer.vtype = vtype;
+				c_typer->vtype = vtype;
 			}
 			else if(eat(Tokens::TOK_KEY_QUANTUM))
-				c_typer.spec |= (1 << SPEC_QU);
+				c_typer->spec |= (1 << SPEC_QU);
 			else if(eat(Tokens::TOK_KEY_CONST))
-				c_typer.spec |= (1 << SPEC_CONST);
+				c_typer->spec |= (1 << SPEC_CONST);
 			else if(eat(Tokens::TOK_KEY_INLINE))
-				c_typer.spec |= (1 << SPEC_INL);
+				c_typer->spec |= (1 << SPEC_INL);
 			else if(eat(Tokens::TOK_KEY_EXTERN))
-				c_typer.spec |= (1 << SPEC_EXT);
+				c_typer->spec |= (1 << SPEC_EXT);
 			else if(eat(Tokens::TOK_KEY_VOLATILE))
-				c_typer.spec |= (1 << SPEC_VOL);
-			else break;
+				c_typer->spec |= (1 << SPEC_VOL);
+			else if(eat(Tokens::TOK_STAR)) {
+				std::shared_ptr<Typer> ptr_typer = std::make_shared<Typer>();
+				ptr_typer->vtype = VAR_POINTER;
+				ptr_typer->respect_ptr = c_typer;
+				c_typer = ptr_typer;
+			} else break;
 		};
-		return c_typer.spec || c_typer.vtype;
+		return c_typer->spec || c_typer->vtype;
 	};
 
 	int getPSize(std::string s) {
@@ -99,7 +104,7 @@ namespace Tokenparser {
 			_input_stream >> c_token;
 			std::string _name = c_token.name;
 
-			Typer m_typer;
+			std::shared_ptr<Typer> m_typer;
 			if(eatTyper(m_typer)) {
 				//eatIdtf or throw error
 			}
