@@ -82,7 +82,7 @@ namespace Tokenparser {
 				c_typer = ptr_typer;
 			} else break;
 		};
-		return c_typer->spec || c_typer->vtype;
+		return c_typer->vtype;
 	};
 
 	int getPSize(std::string s) {
