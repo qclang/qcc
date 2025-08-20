@@ -77,6 +77,7 @@ int proc() {
 				// if(op == 4) std::cerr << "Extern 'C'" << std::endl;
 			};
 			in.ignore();
+			continue;
 		} else if(std::isalnum(curr) || curr == '_') { // Identifiers/keyword must start with an alphabetic char or an '_' char
 			c_token = readAlpNum(in);
 			procAlpNum(c_token);
@@ -111,7 +112,7 @@ int proc() {
 						static_cast<size_t>(in.tellg()) - line_beg + 1,
 						readLine(in)), 1);
 
-	_output_stream << c_token;
+		_output_stream << c_token;
         }
 
 	Token eof_token;
