@@ -114,6 +114,10 @@ int proc() {
 	_output_stream << c_token;
         }
 
+	Token eof_token;
+	eof_token.ttype = Tokens::TOK_SYS_EOF;
+	_output_stream << eof_token;
+
 	return 0;
 }
 

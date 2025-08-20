@@ -103,7 +103,9 @@ typedef enum {
 	TOK_COMMA,       // ,
 	TOK_DOT,         // .
 
-	TOK_KEY_RETURN
+	TOK_KEY_RETURN,
+
+	TOK_SYS_EOF
 } Type;
 
 }
