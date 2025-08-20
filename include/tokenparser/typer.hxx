@@ -22,13 +22,10 @@ enum {
 	SPEC_INL,
 	SPEC_EXT,
 	SPEC_VOL,
-
-
-	SPEC_COUNT
 };
 
 struct Typer {
 	uint8_t vtype;
 	uint8_t spec;
-	std::shared_ptr<Typer> respect_ptr;
+	std::shared_ptr<Typer> respect_typer;
 };
