@@ -80,12 +80,16 @@ namespace Tokenparser {
 				std::shared_ptr<Typer> ptr_typer = std::make_shared<Typer>();
 				ptr_typer->vtype = VAR_POINTER;
 				ptr_typer->respect_typer = c_typer;
-				if(!eatTyper(ptr_typer, true, parent)) {
-					/* Error */
+				c_typer = ptr_typer;
+			} else if(followAll && eat(Tokens::TOK_DEL_PARANL) ) {
+				if(!eatTyper(c_typer, true, parent)) {
+					// Error
 					return 0;
 				}
-				c_typer = ptr_typer;
-				return 1;
+				if(!eat(Tokens::TOK_DEL_PARANR)) {
+					// Should match left paranthese with right one
+					return 0;
+				}
 			} else if(parent && c_token.ttype == Tokens::TOK_IDENTIFIER) {
 				std::cout << "Dec: " << c_token.name << std::endl;
 				eat(Tokens::TOK_IDENTIFIER);
