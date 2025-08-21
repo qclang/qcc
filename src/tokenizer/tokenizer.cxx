@@ -135,7 +135,7 @@ void procAlpNum(Token& arg) {
 	Tokens::Type type;
 	if(name == "angle" ||
 		name == "bit" ||
-		name == "byte" ||
+		name == "char" ||
 		name == "short" ||
 		name == "int" ||
 		name == "float" ||
