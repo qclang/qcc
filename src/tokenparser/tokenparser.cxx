@@ -90,6 +90,7 @@ namespace Tokenparser {
 					// Should match left paranthese with right one
 					return 0;
 				}
+				return 1;
 			} else if(parent && c_token.ttype == Tokens::TOK_IDENTIFIER) {
 				std::cout << "Dec: " << c_token.name << std::endl;
 				eat(Tokens::TOK_IDENTIFIER);
