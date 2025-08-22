@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 
 inline void unrecognizedTokenError(std::string file, size_t line, size_t column, std::string lines) {
