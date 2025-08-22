@@ -90,13 +90,22 @@ namespace Tokenparser {
 					// Should match left paranthese with right one
 					return 0;
 				}
-				return 1;
+				break;
 			} else if(parent && c_token.ttype == Tokens::TOK_IDENTIFIER) {
-				std::cout << "Dec: " << c_token.name << std::endl;
+				std::shared_ptr<Typer> dec_typer = std::make_shared<Typer>();
+				dec_typer->var_name = c_token.name;
+                                dec_typer->vtype = VAR_DECLARE;
+                                dec_typer->respect_typer = c_typer;
+                                c_typer = dec_typer;
 				eat(Tokens::TOK_IDENTIFIER);
-				return 1;
+				break;
                         } else break;
 		};
+
+		// Calc array sizer aka ' [x] ' and function params
+		if(c_typer->vtype == VAR_DECLARE)
+			std::cout << "Declaration: " << c_typer->var_name << std::endl;
+
 		return c_typer->vtype;
 	};
 

@@ -1,4 +1,8 @@
+#pragma once
+
 #include <memory>
+#include <string>
+#include <cstdint>
 
 enum {
 	VAR_UNDEFINED=0,
@@ -13,7 +17,8 @@ enum {
 	VAR_LDOUBLE,
 	VAR_LONG,
 	VAR_LLONG,
-	VAR_POINTER
+	VAR_POINTER,
+	VAR_DECLARE
 };
 
 enum {
@@ -24,7 +29,12 @@ enum {
 	SPEC_VOL,
 };
 
+struct Expression; // Pre definition
+using ExprPtr = std::shared_ptr<Expression>;
+
 struct Typer {
+	std::string var_name;
+	ExprPtr sizer;
 	uint8_t vtype;
 	uint8_t spec;
 	std::shared_ptr<Typer> respect_typer;
