@@ -32,6 +32,8 @@ namespace Tokenparser {
 			return VAR_ANGLE;
 		else if(str == "bit")
 			return VAR_BIT;
+		else if(str == "bool")
+			return VAR_BOOL;
 		else if(str == "char")
 			return VAR_CHAR;
 		else if(str == "short")
