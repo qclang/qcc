@@ -51,7 +51,15 @@ namespace Tokenparser {
 
 	ExprPtr eval(Tokens::Type till);
 
+	ExprPtr evalSquares() {
+		std::cout << "Sizer!" << std::endl;
+		return nullptr;
+	} // eval array sizer or indexer
+
+	std::string to_be_declared_name;
+
 	int eatTyper(std::shared_ptr<Typer>& c_typer, bool followAll, std::vector<StmPtr>* parent = nullptr) {
+		std::shared_ptr<Typer> p_typer = nullptr; // to add parantheses at the end, parantheses has more priority
 		while(1) {
 			if(c_token.ttype == Tokens::TOK_TYPE) {
 				uint8_t vtype = getPVarT(c_token.name);
@@ -84,7 +92,8 @@ namespace Tokenparser {
 				ptr_typer->respect_typer = c_typer;
 				c_typer = ptr_typer;
 			} else if(followAll && eat(Tokens::TOK_DEL_PARANL) ) {
-				if(!eatTyper(c_typer, true, parent)) {
+				p_typer = std::make_shared<Typer>();
+				if(!eatTyper(p_typer, true, parent)) {
 					// Error
 					return 0;
 				}
@@ -94,19 +103,23 @@ namespace Tokenparser {
 				}
 				break;
 			} else if(parent && c_token.ttype == Tokens::TOK_IDENTIFIER) {
-				std::shared_ptr<Typer> dec_typer = std::make_shared<Typer>();
-				dec_typer->var_name = c_token.name;
-                                dec_typer->vtype = VAR_DECLARE;
-                                dec_typer->respect_typer = c_typer;
-                                c_typer = dec_typer;
-				eat(Tokens::TOK_IDENTIFIER);
+				to_be_declared_name = c_token.name;
+				eat(Tokens::TOK_IDENTIFIER); // end
 				break;
                         } else break;
 		};
 
-		// Calc array sizer aka ' [x] ' and function params
-		if(c_typer->vtype == VAR_DECLARE)
-			std::cout << "Declaration: " << c_typer->var_name << std::endl;
+		if(followAll && eat(Tokens::TOK_DEL_SBRACL)) {
+			std::shared_ptr<Typer> arr_typer = std::make_shared<Typer>();
+			arr_typer->vtype = VAR_ARRAY;
+			arr_typer->sizer = evalSquares();
+			if(!eat(Tokens::TOK_DEL_SBRACL)) { /* error */}
+		}
+
+		if(p_typer != nullptr) {
+			p_typer->respect_typer = c_typer;
+			c_typer = p_typer;
+		}
 
 		return c_typer->vtype;
 	};
@@ -114,11 +127,6 @@ namespace Tokenparser {
 	int getPSize(std::string s) {
 		return 0;
 	}
-
-	ExprPtr evalSquares() {
-		return nullptr;
-	} // eval array sizer or indexer
-
 
 	int eatDec(std::vector<StmPtr>& parent) {
 		std::shared_ptr<Typer> main_typer = std::make_shared<Typer>();
@@ -130,6 +138,7 @@ namespace Tokenparser {
 				//error
 				return 0;
 			}
+			// Now declare a variable with the variable 'to_be_declared_name' (std::string)
 		} while(eat(Tokens::TOK_COMMA));
 		return 1;
 	}

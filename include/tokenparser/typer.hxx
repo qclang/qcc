@@ -18,8 +18,7 @@ enum {
 	VAR_LONG,
 	VAR_LLONG,
 	VAR_POINTER,
-	VAR_ARRAY,
-	VAR_DECLARE
+	VAR_ARRAY
 };
 
 enum {
