@@ -113,7 +113,7 @@ namespace Tokenparser {
 			std::shared_ptr<Typer> arr_typer = std::make_shared<Typer>();
 			arr_typer->vtype = VAR_ARRAY;
 			arr_typer->sizer = evalSquares();
-			if(!eat(Tokens::TOK_DEL_SBRACL)) { /* error */}
+			if(!eat(Tokens::TOK_DEL_SBRACR)) { /* error */}
 		}
 
 		if(p_typer != nullptr) {
