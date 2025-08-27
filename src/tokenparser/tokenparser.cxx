@@ -56,7 +56,7 @@ namespace Tokenparser {
 		return nullptr;
 	} // eval array sizer or indexer
 
-	std::string to_be_declared_name;
+	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr>* parent = nullptr);
 
 	int eatTyper(std::shared_ptr<Typer>& c_typer, bool followAll, std::vector<StmPtr>* parent = nullptr) {
 		std::shared_ptr<Typer> p_typer = nullptr; // to add parantheses at the end, parantheses has more priority
@@ -93,7 +93,7 @@ namespace Tokenparser {
 				c_typer = ptr_typer;
 			} else if(followAll && eat(Tokens::TOK_DEL_PARANL) ) {
 				p_typer = std::make_shared<Typer>();
-				if(!eatTyper(p_typer, true, parent)) {
+				if(!eatDec(p_typer, parent)) {
 					// Error
 					return 0;
 				}
@@ -103,7 +103,11 @@ namespace Tokenparser {
 				}
 				break;
 			} else if(parent && c_token.ttype == Tokens::TOK_IDENTIFIER) {
-				to_be_declared_name = c_token.name;
+				std::shared_ptr<Typer> dec_typer = std::make_shared<Typer>();
+                                dec_typer->vtype = VAR_DEC;
+				dec_typer->var_name = c_token.name;
+                                dec_typer->respect_typer = c_typer;
+                                c_typer = dec_typer;
 				eat(Tokens::TOK_IDENTIFIER); // end
 				break;
                         } else break;
@@ -128,17 +132,19 @@ namespace Tokenparser {
 		return 0;
 	}
 
-	int eatDec(std::vector<StmPtr>& parent) {
-		std::shared_ptr<Typer> main_typer = std::make_shared<Typer>();
+	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr>* parent) {
+		if(!main_typer)
+			main_typer = std::make_shared<Typer>();
 		if(!eatTyper(main_typer, false))
 			return 0;
 		do {
 			std::shared_ptr<Typer> c_typer = std::make_shared<Typer>(*main_typer);
-			if(!eatTyper(c_typer, true, &parent)) {
+			if(!eatTyper(c_typer, true, parent)) {
 				//error
 				return 0;
+			} else if(c_typer->vtype == VAR_DEC) {
+				// Now declare a variable with the variable 'to_be_declared_name' (std::string)
 			}
-			// Now declare a variable with the variable 'to_be_declared_name' (std::string)
 		} while(eat(Tokens::TOK_COMMA));
 		return 1;
 	}
@@ -153,8 +159,7 @@ namespace Tokenparser {
 		while(!eat(Tokens::TOK_SYS_EOF)) {
 			std::string _name = c_token.name;
 
-			std::shared_ptr<Typer> m_typer;
-			if(eatDec(parent)) continue;
+			if(eatDec(nullptr, &parent)) continue;
 		}
 
 		return 0;
