@@ -6,6 +6,7 @@
 int main(int argc, char* argv[]) {
 	std::istream* in = nullptr;
 	std::ostream* out = nullptr;
+	BlockStatement stm_root;
 
 	for(int i=1; i < argc; i++) {
 		std::string arg = argv[i];
@@ -43,7 +44,7 @@ int main(int argc, char* argv[]) {
 		out = &std::cout;
 
 	Tokenparser::use(*in);
-	Tokenparser::use(*out);
+	Tokenparser::use(&stm_root);
 
 	Tokenparser::proc();
 

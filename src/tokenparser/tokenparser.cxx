@@ -5,14 +5,14 @@
 namespace Tokenparser {
 
 	std::istream  *_input_stream;
-	std::ostream *_output_stream;
+	BlockStatement* stm_root;
 
 	void use(std::istream &input_stream) {
 	        _input_stream = &input_stream;
 	}
 
-	void use(std::ostream &output_stream) {
-	        _output_stream = &output_stream;
+	void use(BlockStatement* _stm_root) {
+		stm_root = _stm_root;
 	}
 
 	Token c_token;
