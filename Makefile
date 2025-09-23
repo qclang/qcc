@@ -33,4 +33,5 @@ $(BUILD)/%.o: %
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-
+clean:
+	@rm -rf bin build
