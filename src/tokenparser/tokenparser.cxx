@@ -17,7 +17,7 @@ namespace Tokenparser {
 
 	Token c_token;
 
-	int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
+	inline int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
 		if(c_token.ttype == ttype) {
 			std::cout << "Eat: " << c_token.line << ":" << c_token.name << std::endl;
 			_input_stream >> c_token;
@@ -48,15 +48,6 @@ namespace Tokenparser {
 			return VAR_LONG;
 		return VAR_UNDEFINED;
 	}
-
-	ExprPtr eval(Tokens::Type till);
-
-	ExprPtr evalSquares() {
-		std::cout << "Sizer!" << std::endl;
-		return nullptr;
-	} // eval array sizer or indexer
-
-	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr>* parent = nullptr);
 
 	int eatTyper(std::shared_ptr<Typer>& c_typer, bool followAll, std::vector<StmPtr>* parent = nullptr) {
 		std::shared_ptr<Typer> p_typer = nullptr; // to add parantheses at the end, parantheses has more priority
@@ -147,10 +138,6 @@ namespace Tokenparser {
 			}
 		} while(eat(Tokens::TOK_COMMA));
 		return 1;
-	}
-
-	StmPtr evalFunc() {
-		return nullptr;
 	}
 
 	int proc(std::vector<StmPtr> &parent) {
