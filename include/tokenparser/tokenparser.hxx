@@ -10,7 +10,6 @@ namespace Tokenparser {
 	void use(BlockStatement* stm_root);
 
 	ExprPtr eval(Tokens::Type till);
-	ExprPtr evalSquares();
 
 	int eat(Tokens::Type ttype);
 	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr>* parent);

@@ -2,12 +2,15 @@
 
 namespace Tokenparser {
 
-        ExprPtr eval(Tokens::Type till) {
-		
-	}
 
-        ExprPtr evalSquares() {
-		
+	extern Token c_token;
+
+
+        ExprPtr eval(Tokens::Type till) {
+		if(eat(Tokens::TOK_IDENTIFIER)) {
+			
+		}
+			
 	}
 
 }
