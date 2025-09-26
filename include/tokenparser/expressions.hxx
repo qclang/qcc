@@ -146,15 +146,6 @@ struct ForStatement : public Statement {
 	void accept(ExpressionVisitor& v) override;
 };
 
-struct FunctionStatement : public Statement {
-	Typer returnType;
-	std::string name;
-	std::vector<std::pair<std::string, std::string>> parameters;
-	StmPtr body;
-
-	void accept(ExpressionVisitor& v) override;
-};
-
 struct ReturnStatement : public Statement {
 	ExprPtr expr;
 

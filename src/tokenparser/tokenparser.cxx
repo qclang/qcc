@@ -104,12 +104,29 @@ namespace Tokenparser {
                         } else break;
 		};
 
-		if(followAll && eat(Tokens::TOK_DEL_SBRACL)) {
-			std::shared_ptr<Typer> arr_typer = std::make_shared<Typer>();
-			arr_typer->vtype = VAR_ARRAY;
-			if(!eat(Tokens::TOK_DEL_SBRACR))
-				arr_typer->sizer = eval(/* Till that -> */ Tokens::TOK_DEL_SBRACR);
-			
+
+		while(true) {
+			if(followAll && eat(Tokens::TOK_DEL_SBRACL)) {
+				std::shared_ptr<Typer> arr_typer = std::make_shared<Typer>();
+				arr_typer->vtype = VAR_ARRAY;
+				if(!eat(Tokens::TOK_DEL_SBRACR)) /* Predict if is it already end */
+					arr_typer->sizer = eval(/* Till that -> */ Tokens::TOK_DEL_SBRACR);
+				arr_typer->respect_typer = c_typer;
+				c_typer = arr_typer;
+			} else if(followAll && eat(Tokens::TOK_DEL_PARANL)) {
+				std::shared_ptr<Typer> func_typer = std::make_shared<Typer>();
+				func_typer->vtype = VAR_FUN;
+				if(!eat(Tokens::TOK_DEL_PARANR)) /* Predict if is it already end */
+					eatDec(nullptr, &func_typer->func_params);
+
+				if(!eat(Tokens::TOK_DEL_PARANR)) {
+					/* Syntax error, S-Brackets ' [] ' didn't closed*/
+				}
+
+				func_typer->respect_typer = c_typer;
+				c_typer = func_typer;
+
+			} else break;
 		}
 
 		if(p_typer != nullptr) {

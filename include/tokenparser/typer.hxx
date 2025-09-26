@@ -19,6 +19,7 @@ enum {
 	VAR_LLONG,
 	VAR_POINTER,
 	VAR_ARRAY,
+	VAR_FUN,
 	VAR_DEC
 };
 
@@ -33,10 +34,15 @@ enum {
 struct Expression; // Pre definition
 using ExprPtr = std::shared_ptr<Expression>;
 
+struct Statement; // Pre definition
+using StmPtr = std::shared_ptr<Statement>;
+
 struct Typer {
 	std::string var_name;
 	ExprPtr sizer;
 	uint8_t vtype;
 	uint8_t spec;
 	std::shared_ptr<Typer> respect_typer;
+	std::vector<StmPtr> func_params;
 };
+
