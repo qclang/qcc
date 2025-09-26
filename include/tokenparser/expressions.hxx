@@ -166,6 +166,5 @@ struct ExpressionVisitor {
 	virtual void visit(IfStatement &s) = 0;
 	virtual void visit(WhileStatement &s) = 0;
 	virtual void visit(ForStatement &s) = 0;
-	virtual void visit(FunctionStatement &s) = 0;
 	virtual void visit(ReturnStatement &s) = 0;
 };
