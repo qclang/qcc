@@ -105,14 +105,19 @@ namespace Tokenparser {
 		};
 
 
+		std::shared_ptr<Typer> post_typer = nullptr;
+		std::shared_ptr<Typer> c_post_typer = nullptr;
+
 		while(true) {
 			if(followAll && eat(Tokens::TOK_DEL_SBRACL)) {
 				std::shared_ptr<Typer> arr_typer = std::make_shared<Typer>();
 				arr_typer->vtype = VAR_ARRAY;
 				if(!eat(Tokens::TOK_DEL_SBRACR)) /* Predict if is it already end */
 					arr_typer->sizer = eval(/* Till that -> */ Tokens::TOK_DEL_SBRACR);
-				arr_typer->respect_typer = c_typer;
-				c_typer = arr_typer;
+
+				if(!post_typer) post_typer = c_post_typer = arr_typer;
+				else c_post_typer->respect_typer = arr_typer;
+
 			} else if(followAll && eat(Tokens::TOK_DEL_PARANL)) {
 				std::shared_ptr<Typer> func_typer = std::make_shared<Typer>();
 				func_typer->vtype = VAR_FUN;
@@ -123,10 +128,15 @@ namespace Tokenparser {
 					/* Syntax error, S-Brackets ' [] ' didn't closed*/
 				}
 
-				func_typer->respect_typer = c_typer;
-				c_typer = func_typer;
+				if(!post_typer) post_typer = c_post_typer = func_typer;
+				else c_post_typer->respect_typer = func_typer;
 
 			} else break;
+		}
+
+		if(post_typer != nullptr) {
+			post_typer->respect_typer = c_typer;
+			c_typer = post_typer;
 		}
 
 		if(p_typer != nullptr) {
@@ -152,7 +162,7 @@ namespace Tokenparser {
 				//error
 				return 0;
 			} else if(c_typer->vtype == VAR_DEC) {
-				// Now declare a variable with the variable 'to_be_declared_name' (std::string)
+				// Now declare/assign a variable with the variable/function 'c_typer->vname' (std::string)
 			}
 		} while(eat(Tokens::TOK_COMMA));
 		return 1;
