@@ -112,7 +112,7 @@ struct AssignmentStatement : Statement {
 };
 
 struct BlockStatement : public Statement {
-	std::vector<std::shared_ptr<StmPtr>> childs;
+	std::vector<StmPtr> childs;
 
 	void accept(ExpressionVisitor& v) override;
 };
