@@ -44,5 +44,7 @@ struct Typer {
 	uint8_t spec;
 	std::shared_ptr<Typer> respect_typer;
 	std::vector<StmPtr> func_params;
+
+	StmPtr func_body;
 };
 

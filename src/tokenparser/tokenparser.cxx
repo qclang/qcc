@@ -5,7 +5,7 @@
 namespace Tokenparser {
 
 	std::istream  *_input_stream;
-	BlockStatement* stm_root;
+	BlockStatement *stm_root;
 
 	void use(std::istream &input_stream) {
 	        _input_stream = &input_stream;
@@ -18,12 +18,17 @@ namespace Tokenparser {
 	Token c_token;
 
 	inline int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
+
 		if(c_token.ttype == ttype) {
 			std::cout << "Eat: " << c_token.line << ":" << c_token.name << std::endl;
 			_input_stream >> c_token;
 			return 1;
 		}
-
+/*
+		std::cout << "EX : " << ttype << std::endl;
+		std::cout << "Got: " << c_token.ttype << std::endl;
+		std::cout << "   : " << c_token.name << std::endl;
+*/
 		return 0;
 	}
 
@@ -144,6 +149,19 @@ namespace Tokenparser {
 			c_typer = p_typer;
 		}
 
+		if(eat(Tokens::TOK_EQ)) {
+			std::shared_ptr<Typer> fun_ptr = std::make_shared<Typer>();
+			fun_ptr->vtype = VAR_POINTER;
+			fun_ptr->respect_typer = c_typer;
+			c_typer = fun_ptr;
+		} else if(c_typer->vtype == VAR_FUN && !eat(Tokens::TOK_SEMICOLON)) {
+			std::shared_ptr<BlockStatement> func_body = std::make_shared<BlockStatement>();
+
+			proc(&func_body->childs);
+
+		}
+
+
 		return c_typer->vtype;
 	};
 
@@ -168,21 +186,37 @@ namespace Tokenparser {
 		return 1;
 	}
 
-	int proc(std::vector<StmPtr> &parent) {
-		if(!_input_stream) return 1;
-		_input_stream >> c_token;
-		while(!eat(Tokens::TOK_SYS_EOF)) {
-			std::string _name = c_token.name;
+	int proc_inl(std::vector<StmPtr> *parent) {
+		if(eat(Tokens::TOK_DEL_SBRACL)) {
 
-			if(eatDec(nullptr, &parent)) continue;
-		}
+			proc_body(parent);
 
+			if(!eat(Tokens::TOK_DEL_SBRACR)) {
+				/* Error */
+			}
+		} if(eatDec(nullptr, parent)) return 0;
+		return 1;
+	}
+
+	int proc_body(std::vector<StmPtr> *parent) {
+		while(!eat(Tokens::TOK_SYS_EOF))
+			if(proc_inl(parent)) break;
 		return 0;
 	}
 
-	std::vector<StmPtr> main_block;
+	int proc(std::vector<StmPtr> *parent) {
+		if(eat(Tokens::TOK_DEL_CBRACL)) {
+			if(proc_body(parent)) return 1;
+			if(!eat(Tokens::TOK_DEL_CBRACR)) {
+				/* Error */
+			}
+		} else if(proc_inl(parent)) return 1;
+
+	}
 
 	int proc() {
-		return proc(main_block);
+		if(!_input_stream || !stm_root) return 1;
+		_input_stream >> c_token;
+		return proc_body(&stm_root->childs);
 	}
 }
