@@ -15,8 +15,7 @@ namespace Tokenparser {
 	int eat(Tokens::Type ttype);
 	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr>* parent);
 
-        int proc_inl(std::vector<StmPtr> *parent);
+        int proc(std::vector<StmPtr> *parent, const bool _inline = true);
         int proc_body(std::vector<StmPtr> *parent);
-        int proc(std::vector<StmPtr> *parent);
 	int proc();
 }

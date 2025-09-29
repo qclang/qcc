@@ -205,13 +205,14 @@ namespace Tokenparser {
 
 
 
-/*
-* Return values and their meanings:
-*   0 : No catch
-*   1 : Problem caught
-*   2 : Finish
-*/
-	int proc_inl(std::vector<StmPtr> *parent) {
+	/*
+	* Return values and their meanings:
+	*   0 : No catch
+	*   1 : Problem caught
+	*   2 : Finish
+	*/
+
+	int proc(std::vector<StmPtr> *parent, const bool _inline) {
 
 		if(eat(Tokens::TOK_DEL_CBRACL)) {
 			if(proc_body(parent)) return 1;
@@ -224,23 +225,25 @@ namespace Tokenparser {
 			return 0;
 		}
 
-		if(eatDec(nullptr, parent)) return 0;
+		if(eatDec(nullptr, parent)) {
+			if(_inline) {
+				/* Warning */
+				return 1;
+			}
+			return 0;
+		}
 
 		return 2;
 	}
 
 	int proc_body(std::vector<StmPtr> *parent) {
 		while(!eat(Tokens::TOK_SYS_EOF)) {
-			int cons = proc_inl(parent);
+			int cons = proc(parent, false);
 			if(cons == 1)
 				return 1;
 			else if(cons == 2) return 0;
 		}
 		return 0;
-	}
-
-	int proc(std::vector<StmPtr> *parent) {
-		return proc_inl(parent);
 	}
 
 	int proc() {
