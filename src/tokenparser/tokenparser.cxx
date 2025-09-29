@@ -24,11 +24,11 @@ namespace Tokenparser {
 			_input_stream >> c_token;
 			return 1;
 		}
-/*
-		std::cout << "EX : " << ttype << std::endl;
-		std::cout << "Got: " << c_token.ttype << std::endl;
-		std::cout << "   : " << c_token.name << std::endl;
-*/
+
+//		std::cout << "EX : " << ttype << std::endl;
+//		std::cout << "Got: " << c_token.ttype << std::endl;
+//		std::cout << "   : " << c_token.name << std::endl;
+
 		return 0;
 	}
 
@@ -154,7 +154,7 @@ namespace Tokenparser {
 			fun_ptr->vtype = VAR_POINTER;
 			fun_ptr->respect_typer = c_typer;
 			c_typer = fun_ptr;
-		} else if(c_typer->vtype == VAR_FUN && !eat(Tokens::TOK_SEMICOLON)) {
+		} else if(c_typer->vtype == VAR_FUN) {
 			std::shared_ptr<BlockStatement> func_body = std::make_shared<BlockStatement>();
 
 			proc(&func_body->childs);
@@ -174,6 +174,8 @@ namespace Tokenparser {
 			main_typer = std::make_shared<Typer>();
 		if(!eatTyper(main_typer, false))
 			return 0;
+
+		bool is_stm_open = true;
 		do {
 			std::shared_ptr<Typer> c_typer = std::make_shared<Typer>(*main_typer);
 			if(!eatTyper(c_typer, true, parent)) {
@@ -181,37 +183,64 @@ namespace Tokenparser {
 				return 0;
 			} else if(c_typer->vtype == VAR_DEC) {
 				// Now declare/assign a variable with the variable/function 'c_typer->vname' (std::string)
+
+				if(eat(Tokens::TOK_SEMICOLON)) {
+					is_stm_open = false;
+					break;
+				}
+			} else if(c_typer->vtype == VAR_FUN) {
+				// ...
+				is_stm_open = false;
 			}
 		} while(eat(Tokens::TOK_COMMA));
+
+		if(is_stm_open) {
+			/* Error */
+			std::cout << "Expected a semicolon but get something else" << std::endl;
+			return 0;
+		}
+
 		return 1;
 	}
 
+
+
+/*
+* Return values and their meanings:
+*   0 : No catch
+*   1 : Problem caught
+*   2 : Finish
+*/
 	int proc_inl(std::vector<StmPtr> *parent) {
-		if(eat(Tokens::TOK_DEL_SBRACL)) {
 
-			proc_body(parent);
+		if(eat(Tokens::TOK_DEL_CBRACL)) {
+			if(proc_body(parent)) return 1;
 
-			if(!eat(Tokens::TOK_DEL_SBRACR)) {
+			if(!eat(Tokens::TOK_DEL_CBRACR)) {
 				/* Error */
+				std::cout << "Expected } but get something else" << std::endl;
+				return 1;
 			}
-		} if(eatDec(nullptr, parent)) return 0;
-		return 1;
+			return 0;
+		}
+
+		if(eatDec(nullptr, parent)) return 0;
+
+		return 2;
 	}
 
 	int proc_body(std::vector<StmPtr> *parent) {
-		while(!eat(Tokens::TOK_SYS_EOF))
-			if(proc_inl(parent)) break;
+		while(!eat(Tokens::TOK_SYS_EOF)) {
+			int cons = proc_inl(parent);
+			if(cons == 1)
+				return 1;
+			else if(cons == 2) return 0;
+		}
 		return 0;
 	}
 
 	int proc(std::vector<StmPtr> *parent) {
-		if(eat(Tokens::TOK_DEL_CBRACL)) {
-			if(proc_body(parent)) return 1;
-			if(!eat(Tokens::TOK_DEL_CBRACR)) {
-				/* Error */
-			}
-		} else if(proc_inl(parent)) return 1;
-
+		return proc_inl(parent);
 	}
 
 	int proc() {
