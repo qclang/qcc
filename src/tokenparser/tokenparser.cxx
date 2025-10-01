@@ -214,6 +214,9 @@ namespace Tokenparser {
 
 	int proc(std::vector<StmPtr> *parent, const bool _inline) {
 
+		if(eat(Tokens::TOK_SEMICOLON))
+			return 0;
+
 		if(eat(Tokens::TOK_DEL_CBRACL)) {
 			if(proc_body(parent)) return 1;
 
