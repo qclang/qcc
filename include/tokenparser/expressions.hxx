@@ -75,7 +75,7 @@ struct UnaryExpression : public Expression {
 enum {
 	LIT_NUMBER,
 	LIT_FLOAT,
-	LIT_STRING;
+	LIT_STRING
 };
 
 struct LiteralExpression : public Expression {
