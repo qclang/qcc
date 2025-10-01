@@ -71,7 +71,15 @@ struct UnaryExpression : public Expression {
         void accept(ExpressionVisitor& v) override;
 };
 
+
+enum {
+	LIT_NUMBER,
+	LIT_FLOAT,
+	LIT_STRING;
+};
+
 struct LiteralExpression : public Expression {
+	int ltype;
 	std::string value;
 
 	LiteralExpression(std::string value);
