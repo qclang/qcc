@@ -26,7 +26,7 @@ enum class OPE {
 
 	XOR,
 
-	SET, // =
+	ASSIGN, // =
 
 	ADDR, // &x
 	DEREF, // *x
@@ -108,13 +108,6 @@ struct DeclarationStatement : Statement {
 	ExprPtr sizer, initializer;
 
 	DeclarationStatement(std::string& name, Typer& type_spex);
-
-	void accept(ExpressionVisitor& v) override;
-};
-
-struct AssignmentStatement : Statement {
-	std::string name;
-	ExprPtr value;
 
 	void accept(ExpressionVisitor& v) override;
 };
