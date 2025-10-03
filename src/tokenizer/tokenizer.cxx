@@ -214,7 +214,7 @@ void procSymbol(Token& arg) {
 	else if(name == "]")
                 type = Tokens::TOK_DEL_SBRACR;
 	else if(name == "=")
-		type = Tokens::TOK_EQ;
+		type = Tokens::TOK_ASSIGN;
 	else if(name == "+")
                 type = Tokens::TOK_PLUS;
 	else if(name == "-")

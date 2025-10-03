@@ -49,7 +49,6 @@ typedef enum {
 	TOK_DEL_SBRACL,  // [
 	TOK_DEL_SBRACR,  // ]
 
-	TOK_EQ, // =
 	TOK_PLUS, // +
 	TOK_MINUS, // -
 	TOK_STAR, // *
@@ -64,6 +63,7 @@ typedef enum {
 	TOK_DEC,         // --
 	TOK_ARROW,       // ->
 	TOK_ELLIPSIS,    // ...
+	TOK_ASSIGN, // =
 	TOK_ASSIGN_PLUS,  // +=
 	TOK_ASSIGN_MINUS, // -=
 	TOK_ASSIGN_MUL,   // *=

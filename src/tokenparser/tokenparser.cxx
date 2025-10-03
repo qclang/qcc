@@ -149,7 +149,7 @@ namespace Tokenparser {
 			c_typer = p_typer;
 		}
 
-		if(eat(Tokens::TOK_EQ)) {
+		if(eat(Tokens::TOK_ASSIGN)) {
 			std::shared_ptr<Typer> fun_ptr = std::make_shared<Typer>();
 			fun_ptr->vtype = VAR_POINTER;
 			fun_ptr->respect_typer = c_typer;
