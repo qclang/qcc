@@ -11,7 +11,6 @@ void LiteralExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
 void VariableExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
 
 void DeclarationStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
-void AssignmentStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
 void BlockStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
 void ExpressionStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
 void IfStatement::accept(ExpressionVisitor& v) { v.visit(*this); }
