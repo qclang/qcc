@@ -82,7 +82,7 @@ struct LiteralExpression : public Expression {
 	int ltype;
 	std::string value;
 
-	LiteralExpression(std::string value);
+	LiteralExpression(int ltype, std::string value);
 
         void accept(ExpressionVisitor& v) override;
 };
