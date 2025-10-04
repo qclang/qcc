@@ -103,9 +103,7 @@ struct Statement {
 using StmPtr = std::shared_ptr<Statement>;
 
 struct DeclarationStatement : Statement {
-	std::string name;
 	Typer type_spec;
-	ExprPtr sizer, initializer;
 
 	void accept(ExpressionVisitor& v) override;
 };
