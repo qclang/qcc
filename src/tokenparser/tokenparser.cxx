@@ -97,6 +97,7 @@ namespace Tokenparser {
 					return 0;
 				}
 				if(!eat(Tokens::TOK_DEL_PARANR)) {
+					/* Error */
 					// Should match left paranthese with right one
 					return 0;
 				}
