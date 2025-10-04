@@ -107,8 +107,6 @@ struct DeclarationStatement : Statement {
 	Typer type_spec;
 	ExprPtr sizer, initializer;
 
-	DeclarationStatement(std::string& name, Typer& type_spex);
-
 	void accept(ExpressionVisitor& v) override;
 };
 
@@ -120,7 +118,6 @@ struct BlockStatement : public Statement {
 
 struct ExpressionStatement : public Statement {
 	ExprPtr expr;
-	ExpressionStatement(ExprPtr& expr) : expr(expr) {};
 
 	void accept(ExpressionVisitor& v) override;
 };
