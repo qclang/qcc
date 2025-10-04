@@ -105,6 +105,7 @@ typedef enum {
 
 	TOK_KEY_RETURN,
 
+	TOK_SYS_SKIP,
 	TOK_SYS_EOF
 } Type;
 

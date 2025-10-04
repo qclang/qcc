@@ -19,6 +19,9 @@ namespace Tokenparser {
 
 	inline int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
 
+		if(ttype == Tokens::TOK_SYS_SKIP)
+			return 1;
+
 		if(c_token.ttype == ttype) {
 			std::cout << "Eat: " << c_token.line << ":" << c_token.name << std::endl;
 			_input_stream >> c_token;
@@ -158,9 +161,7 @@ namespace Tokenparser {
 			std::shared_ptr<BlockStatement> func_body = std::make_shared<BlockStatement>();
 
 			proc(&func_body->childs);
-
 		}
-
 
 		return c_typer->vtype;
 	};
