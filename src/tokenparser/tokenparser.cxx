@@ -102,11 +102,15 @@ namespace Tokenparser {
 				}
 				break;
 			} else if(parent && c_token.ttype == Tokens::TOK_IDENTIFIER) {
-				std::shared_ptr<Typer> dec_typer = std::make_shared<Typer>();
-                                dec_typer->vtype = VAR_DEC;
-				dec_typer->var_name = c_token.name;
-                                dec_typer->respect_typer = c_typer;
-                                c_typer = dec_typer;
+				if(p_typer) {
+					/* Error */
+					/* More than one identifiers */
+					return 0;
+				}
+				p_typer = std::make_shared<Typer>();
+                                p_typer->vtype = VAR_DEC;
+				p_typer->var_name = c_token.name;
+
 				eat(Tokens::TOK_IDENTIFIER); // end
 				break;
                         } else break;
@@ -117,7 +121,7 @@ namespace Tokenparser {
 		std::shared_ptr<Typer> c_post_typer = nullptr;
 
 		while(true) {
-			if(followAll && eat(Tokens::TOK_DEL_SBRACL)) {
+			if(eat(Tokens::TOK_DEL_SBRACL)) {
 				std::shared_ptr<Typer> arr_typer = std::make_shared<Typer>();
 				arr_typer->vtype = VAR_ARRAY;
 				if(!eat(Tokens::TOK_DEL_SBRACR)) /* Predict if is it already end */
@@ -126,7 +130,7 @@ namespace Tokenparser {
 				if(!post_typer) post_typer = c_post_typer = arr_typer;
 				else c_post_typer->respect_typer = arr_typer;
 
-			} else if(followAll && eat(Tokens::TOK_DEL_PARANL)) {
+			} else if(eat(Tokens::TOK_DEL_PARANL)) {
 				std::shared_ptr<Typer> func_typer = std::make_shared<Typer>();
 				func_typer->vtype = VAR_FUN;
 				if(!eat(Tokens::TOK_DEL_PARANR)) /* Predict if is it already end */
@@ -152,15 +156,35 @@ namespace Tokenparser {
 			c_typer = p_typer;
 		}
 
-		if(eat(Tokens::TOK_ASSIGN)) {
-			std::shared_ptr<Typer> fun_ptr = std::make_shared<Typer>();
-			fun_ptr->vtype = VAR_POINTER;
-			fun_ptr->respect_typer = c_typer;
-			c_typer = fun_ptr;
-		} else if(c_typer->vtype == VAR_FUN) {
-			std::shared_ptr<BlockStatement> func_body = std::make_shared<BlockStatement>();
+/*
+*		I'll use Tokens::TOK_SYS_SKIP instead of Tokens::TOK_SEMICOLON because I wan't to get rid of semicolons without breaking C syntax as much as posible .
+*
+*		I'll set initializer to the highest typer and it's 'Tokens Typer::ttype' should be equals to Tokens::VAR_DEC .
+*/
 
-			proc(&func_body->childs);
+		if(c_typer->vtype == VAR_DEC) {
+			if(eat(Tokens::TOK_ASSIGN)) {
+
+				if(c_typer->respect_typer->vtype == VAR_FUN) {
+					std::shared_ptr<Typer> fun_ptr = std::make_shared<Typer>();
+					fun_ptr->vtype = VAR_POINTER;
+					fun_ptr->respect_typer = c_typer->respect_typer;
+					c_typer->respect_typer = fun_ptr;
+				}
+
+				std::shared_ptr<ExpressionStatement> initializer = std::make_shared<ExpressionStatement>();
+				initializer->expr = std::make_shared<BinaryExpression>(
+						std::make_shared<VariableExpression>(c_typer->var_name),
+						OPE::ASSIGN,
+						eval(Tokens::TOK_SYS_SKIP)
+					);
+
+				c_typer->initializer = initializer;
+			} else if(c_typer->respect_typer && c_typer->respect_typer->vtype == VAR_FUN) {
+				std::shared_ptr<BlockStatement> func_body = std::make_shared<BlockStatement>();
+				proc(&func_body->childs, true);
+				c_typer->initializer = func_body;
+			}
 		}
 
 		return c_typer->vtype;
@@ -184,22 +208,8 @@ namespace Tokenparser {
 				return 0;
 			} else if(c_typer->vtype == VAR_DEC) {
 				// Now declare/assign a variable with the variable/function 'c_typer->vname' (std::string)
-
-				if(eat(Tokens::TOK_SEMICOLON)) {
-					is_stm_open = false;
-					break;
-				}
-			} else if(c_typer->vtype == VAR_FUN) {
-				// ...
-				is_stm_open = false;
 			}
 		} while(eat(Tokens::TOK_COMMA));
-
-		if(is_stm_open) {
-			/* Error */
-			std::cout << "Expected a semicolon but get something else" << std::endl;
-			return 0;
-		}
 
 		return 1;
 	}
