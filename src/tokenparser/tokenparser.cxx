@@ -19,18 +19,16 @@ namespace Tokenparser {
 
 	inline int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
 
-		if(ttype == Tokens::TOK_SYS_SKIP)
+		if(ttype == Tokens::TOK_SYS_SKIP) {
 			return 1;
+			std::cout << "Skip: " << c_token.line << ":" << c_token.name << std::endl;
+		}
 
 		if(c_token.ttype == ttype) {
 			std::cout << "Eat: " << c_token.line << ":" << c_token.name << std::endl;
 			_input_stream >> c_token;
 			return 1;
 		}
-
-//		std::cout << "EX : " << ttype << std::endl;
-//		std::cout << "Got: " << c_token.ttype << std::endl;
-//		std::cout << "   : " << c_token.name << std::endl;
 
 		return 0;
 	}
@@ -63,7 +61,7 @@ namespace Tokenparser {
 			if(c_token.ttype == Tokens::TOK_TYPE) {
 				uint8_t vtype = getPVarT(c_token.name);
 				eat(Tokens::TOK_TYPE);
-                                if(vtype == VAR_LONG) switch(c_typer->vtype) {
+				if(vtype == VAR_LONG) switch(c_typer->vtype) {
 					case VAR_LONG:
 					case VAR_DOUBLE:
 					case VAR_INT:
@@ -92,20 +90,18 @@ namespace Tokenparser {
 				c_typer = ptr_typer;
 			} else if(followAll && eat(Tokens::TOK_DEL_PARANL) ) {
 				p_typer = std::make_shared<Typer>();
-				if(!eatDec(p_typer, parent)) {
-					// Error
-					return 0;
-				}
+				eatDec(p_typer, parent);
 				if(!eat(Tokens::TOK_DEL_PARANR)) {
 					/* Error */
 					// Should match left paranthese with right one
+					std::cout << "Parantheses didn't closed: " << c_token.name << std::endl;
 					return 0;
 				}
 				break;
 			} else if(parent && c_token.ttype == Tokens::TOK_IDENTIFIER) {
 				if(p_typer) {
 					/* Error */
-					/* More than one identifiers */
+					std::cout << "More than one identifiers" << std::endl;
 					return 0;
 				}
 				p_typer = std::make_shared<Typer>();
@@ -121,7 +117,7 @@ namespace Tokenparser {
 		std::shared_ptr<Typer> post_typer = nullptr;
 		std::shared_ptr<Typer> c_post_typer = nullptr;
 
-		while(true) {
+		while(followAll) {
 			if(eat(Tokens::TOK_DEL_SBRACL)) {
 				std::shared_ptr<Typer> arr_typer = std::make_shared<Typer>();
 				arr_typer->vtype = VAR_ARRAY;
@@ -163,7 +159,7 @@ namespace Tokenparser {
 *		I'll set initializer to the highest typer and it's 'Tokens Typer::ttype' should be equals to Tokens::VAR_DEC .
 */
 
-		if(c_typer->vtype == VAR_DEC) {
+		if(followAll && c_typer->vtype == VAR_DEC) {
 			if(eat(Tokens::TOK_ASSIGN)) {
 
 				if(c_typer->respect_typer->vtype == VAR_FUN) {
@@ -201,7 +197,6 @@ namespace Tokenparser {
 		if(!eatTyper(main_typer, false))
 			return 0;
 
-		bool is_stm_open = true;
 		do {
 			std::shared_ptr<Typer> c_typer = std::make_shared<Typer>(*main_typer);
 			if(!eatTyper(c_typer, true, parent)) {
