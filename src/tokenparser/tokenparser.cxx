@@ -56,6 +56,9 @@ namespace Tokenparser {
 	}
 
 	int eatTyper(std::shared_ptr<Typer>& c_typer, bool followAll, std::vector<StmPtr>* parent = nullptr) {
+
+		bool is_type_specified_in_this_scope;
+
 		std::shared_ptr<Typer> p_typer = nullptr; // to add parantheses at the end, parantheses has more priority
 		while(1) {
 			if(c_token.ttype == Tokens::TOK_TYPE) {
@@ -69,9 +72,12 @@ namespace Tokenparser {
 						continue;
 					default: break;
 				}
-				if(c_typer->vtype)
+
+				if(is_type_specified_in_this_scope)
 					std::cerr << "Warning! Declaration with multiple types, last one will be count!!" << std::endl;
+
 				c_typer->vtype = vtype;
+				is_type_specified_in_this_scope = true;
 			}
 			else if(eat(Tokens::TOK_KEY_QUANTUM))
 				c_typer->spec |= (1 << SPEC_QU);
