@@ -57,7 +57,7 @@ namespace Tokenparser {
 
 	int eatTyper(std::shared_ptr<Typer>& c_typer, bool followAll, std::vector<StmPtr>* parent = nullptr) {
 
-		bool is_type_specified_in_this_scope;
+		bool is_type_specified_in_this_scope = false;
 
 		std::shared_ptr<Typer> p_typer = nullptr; // to add parantheses at the end, parantheses has more priority
 		while(1) {
