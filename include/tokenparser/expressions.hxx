@@ -36,10 +36,10 @@ enum class OPE {
 
 	// Unary Operators
 	NEG, // ~x
-	INCB, // ++x or x++
-	INCL,
-	DECC, // --x or x--
-	DECL,
+	INCB, // ++x
+	INCA, // x++
+	DECB, // --x
+	DECA, // x--
 
 	NOT // !
 };
