@@ -249,6 +249,11 @@ namespace Tokenparser {
 			return 0;
 		}
 
+		ExprPtr expr = eval(Tokens::TOK_SYS_SKIP);
+		if(expr) {
+			return 0;
+		}
+
 		return 2;
 	}
 
