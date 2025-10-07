@@ -141,7 +141,8 @@ void procAlpNum(Token& arg) {
 		name == "int" ||
 		name == "float" ||
 		name == "double" ||
-		name == "long")
+		name == "long" ||
+		name == "void")
 		type = Tokens::TOK_TYPE;
 	else if(name == "struct")
 		type = Tokens::TOK_STRUCT;

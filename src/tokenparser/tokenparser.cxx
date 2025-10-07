@@ -52,6 +52,8 @@ namespace Tokenparser {
 			return VAR_DOUBLE;
 		else if(str == "long")
 			return VAR_LONG;
+		else if(str == "void")
+			return VAR_VOID;
 		return VAR_UNDEFINED;
 	}
 
