@@ -210,6 +210,9 @@ namespace Tokenparser {
 				return 0;
 			} else if(c_typer->vtype == VAR_DEC) {
 				// Now declare/assign a variable with the variable/function 'c_typer->vname' (std::string)
+				std::shared_ptr<DeclarationStatement> stm = std::make_shared<DeclarationStatement>();
+				stm->type_spec = c_typer;
+				parent->push_back(stm);
 			}
 		} while(eat(Tokens::TOK_COMMA));
 
@@ -251,6 +254,9 @@ namespace Tokenparser {
 
 		ExprPtr expr = eval(Tokens::TOK_SYS_SKIP);
 		if(expr) {
+			std::shared_ptr<ExpressionStatement> stm = std::make_shared<ExpressionStatement>();
+			stm->expr = expr;
+			parent->push_back(stm);
 			return 0;
 		}
 
