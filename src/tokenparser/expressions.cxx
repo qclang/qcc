@@ -6,6 +6,7 @@ LiteralExpression::LiteralExpression(int ltype, std::string value) : ltype(ltype
 VariableExpression::VariableExpression(std::string name) : name(name) {}
 
 void BinaryExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
+void TupleExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
 void UnaryExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
 void LiteralExpression::accept(ExpressionVisitor& v) { v.visit(*this); }
 void VariableExpression::accept(ExpressionVisitor& v) { v.visit(*this); }

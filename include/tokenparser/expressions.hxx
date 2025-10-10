@@ -35,13 +35,15 @@ enum class OPE {
 	MEMP, // x->y
 
 	// Unary Operators
+	NOT, // !
 	NEG, // ~x
 	INCB, // ++x
 	INCA, // x++
 	DECB, // --x
 	DECA, // x--
+	FUNCALL, // f(...)
 
-	NOT // !
+	COMMA // <Expression>, <Expression>       see: https://en.wikipedia.org/wiki/Comma_operator
 };
 
 struct ExpressionVisitor;
@@ -62,9 +64,15 @@ struct BinaryExpression : public Expression {
 	void accept(ExpressionVisitor& v) override;
 };
 
+struct TupleExpression : public Expression {
+	std::vector<ExprPtr> values;
+	void accept(ExpressionVisitor& v) override;
+};
+
 struct UnaryExpression : public Expression {
         ExprPtr te;
         OPE op;
+	std::shared_ptr<TupleExpression> tuple;
 
         UnaryExpression(ExprPtr te, OPE op);
 
@@ -145,12 +153,12 @@ struct ForStatement : public Statement {
 struct ReturnStatement : public Statement {
 	ExprPtr expr;
 
-
 	void accept(ExpressionVisitor& v) override;
 };
 
 struct ExpressionVisitor {
 	virtual void visit(BinaryExpression &e) = 0;
+	virtual void visit(TupleExpression &e) = 0;
 	virtual void visit(UnaryExpression &e) = 0;
 	virtual void visit(LiteralExpression &e) = 0;
 	virtual void visit(VariableExpression &e) = 0;
