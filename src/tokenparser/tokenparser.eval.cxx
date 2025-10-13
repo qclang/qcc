@@ -46,10 +46,8 @@ namespace Tokenparser {
 								idtf_expr,
 								OPE::ASSIGN,
 								eval(Tokens::TOK_SEMICOLON));
-				else {
-					std::shared_ptr c_expr = std::make_shared<ExpressionStatement>();
-					c_expr->expr = idtf_expr;
-				}
+				else
+					return idtf_expr;
 			}
 		}
 
