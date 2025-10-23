@@ -42,6 +42,7 @@ enum class OPE {
 	DECB, // --x
 	DECA, // x--
 	FUNCALL, // f(...)
+	TYPECAST, // (typename)x
 
 	COMMA // <Expression>, <Expression>       see: https://en.wikipedia.org/wiki/Comma_operator
 };
@@ -78,7 +79,6 @@ struct UnaryExpression : public Expression {
 
         void accept(ExpressionVisitor& v) override;
 };
-
 
 enum {
 	LIT_NUMBER,
