@@ -66,7 +66,7 @@ struct BinaryExpression : public Expression {
 };
 
 struct TupleExpression : public Expression {
-	std::vector<ExprPtr> values;
+	std::vector<ExprPtr> expressions;
 	void accept(ExpressionVisitor& v) override;
 };
 
