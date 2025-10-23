@@ -10,6 +10,7 @@ namespace Tokenparser {
 	void use(std::istream &input_stream);
 	void use(BlockStatement* stm_root);
 
+	ExprPtr eval_single(Tokens::Type till);
 	std::shared_ptr<TupleExpression> eval(Tokens::Type till);
 
 	int eat(Tokens::Type ttype);

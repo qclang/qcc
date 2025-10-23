@@ -20,8 +20,8 @@ namespace Tokenparser {
 	inline int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
 
 		if(ttype == Tokens::TOK_SYS_SKIP) {
+//			std::cout << "Skip: " << c_token.line << ":" << c_token.name << std::endl;
 			return 1;
-			std::cout << "Skip: " << c_token.line << ":" << c_token.name << std::endl;
 		}
 
 		if(c_token.ttype == ttype) {
@@ -181,7 +181,7 @@ namespace Tokenparser {
 				initializer->expr = std::make_shared<BinaryExpression>(
 						std::make_shared<VariableExpression>(c_typer->var_name),
 						OPE::ASSIGN,
-						eval(Tokens::TOK_SYS_SKIP)
+						eval_single(Tokens::TOK_SYS_SKIP)
 					);
 
 				c_typer->initializer = initializer;

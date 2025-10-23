@@ -68,11 +68,25 @@ namespace Tokenparser {
 		return 0;
 	}
 
+	ExprPtr eval_single(Tokens::Type till) {
+		ExprPtr expr = eval(); // We'll modify that func later on
+		if(!eat(till)) {
+			/* Error */
+			std::cout << "Unexpected token" << std::endl;
+		}
+		return expr;
+	}
+
 	std::shared_ptr<TupleExpression> eval(Tokens::Type till) {
 		std::shared_ptr<TupleExpression> tuple = std::make_shared<TupleExpression>();
 		do {
-			tuple->expressions.push_back(eval());
+			tuple->expressions.push_back(eval_single(Tokens::TOK_SYS_SKIP));
 		} while(eat(Tokens::TOK_COMMA));
+
+		if(!eat(till)) { /* Error */
+			std::cout << "Unexcepted token" << std::endl;
+		}
+
 		return tuple;
 	}
 }
