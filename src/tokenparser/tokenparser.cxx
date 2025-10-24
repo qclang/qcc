@@ -5,13 +5,13 @@
 namespace Tokenparser {
 
 	std::istream  *_input_stream;
-	BlockStatement *stm_root;
+	std::shared_ptr<BlockStatement> stm_root;
 
 	void use(std::istream &input_stream) {
 	        _input_stream = &input_stream;
 	}
 
-	void use(BlockStatement* _stm_root) {
+	void use(std::shared_ptr<BlockStatement> _stm_root) {
 		stm_root = _stm_root;
 	}
 
@@ -57,7 +57,7 @@ namespace Tokenparser {
 		return VAR_UNDEFINED;
 	}
 
-	int eatTyper(std::shared_ptr<Typer>& c_typer, bool followAll, std::vector<StmPtr>* parent = nullptr) {
+	int eatTyper(std::shared_ptr<Typer>& c_typer, bool followAll, std::vector<StmPtr> *parent = nullptr) {
 
 		bool is_type_specified_in_this_scope = false;
 
@@ -187,7 +187,7 @@ namespace Tokenparser {
 				c_typer->initializer = initializer;
 			} else if(c_typer->respect_typer && c_typer->respect_typer->vtype == VAR_FUN) {
 				std::shared_ptr<BlockStatement> func_body = std::make_shared<BlockStatement>();
-				proc(&func_body->childs, true);
+				proc(func_body, true);
 				c_typer->initializer = func_body;
 			}
 		}
@@ -199,7 +199,7 @@ namespace Tokenparser {
 		return 0;
 	}
 
-	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr>* parent) {
+	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr> *parent) {
 		if(!main_typer)
 			main_typer = std::make_shared<Typer>();
 		if(!eatTyper(main_typer, false))
@@ -230,7 +230,7 @@ namespace Tokenparser {
 	*   2 : Finish
 	*/
 
-	int proc(std::vector<StmPtr> *parent, const bool _inline) {
+	int proc(std::shared_ptr<BlockStatement> parent, const bool _inline) {
 
 		if(eat(Tokens::TOK_SEMICOLON))
 			return 0;
@@ -241,7 +241,7 @@ namespace Tokenparser {
 			return 0;
 		}
 
-		if(eatDec(nullptr, parent)) {
+		if(eatDec(nullptr, &parent->childs)) {
 			if(_inline) {
 				/* Warning */
 				return 1;
@@ -253,14 +253,14 @@ namespace Tokenparser {
 		if(expr) {
 			std::shared_ptr<ExpressionStatement> stm = std::make_shared<ExpressionStatement>();
 			stm->expr = expr;
-			parent->push_back(stm);
+			parent->childs.push_back(stm);
 			return 0;
 		}
 
 		return 2;
 	}
 
-	int proc_body(std::vector<StmPtr> *parent, Tokens::Type end_token) {
+	int proc_body(std::shared_ptr<BlockStatement> parent, Tokens::Type end_token) {
 		while(true) {
 			if(eat(end_token))
 				return 0;
@@ -277,6 +277,6 @@ namespace Tokenparser {
 	int proc() {
 		if(!_input_stream || !stm_root) return 1;
 		_input_stream >> c_token;
-		return proc_body(&stm_root->childs);
+		return proc_body(stm_root);
 	}
 }
