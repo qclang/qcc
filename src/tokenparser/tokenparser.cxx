@@ -20,12 +20,12 @@ namespace Tokenparser {
 	inline int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
 
 		if(ttype == Tokens::TOK_SYS_SKIP) {
-//			std::cout << "Skip: " << c_token.line << ":" << c_token.name << std::endl;
+			std::cout << "Skip: " << c_token.line << ":" << c_token.name << std::endl;
 			return 1;
 		}
 
 		if(c_token.ttype == ttype) {
-			std::cout << "Eat: " << c_token.line << ":" << c_token.name << std::endl;
+			std::cout << "Eat : " << c_token.line << ":" << c_token.name << std::endl;
 			_input_stream >> c_token;
 			return 1;
 		}
@@ -236,13 +236,8 @@ namespace Tokenparser {
 			return 0;
 
 		if(eat(Tokens::TOK_DEL_CBRACL)) {
-			if(proc_body(parent)) return 1;
+			if(proc_body(parent, Tokens::TOK_DEL_CBRACR)) return 1;
 
-			if(!eat(Tokens::TOK_DEL_CBRACR)) {
-				/* Error */
-				std::cout << "Expected } but get something else" << std::endl;
-				return 1;
-			}
 			return 0;
 		}
 
@@ -265,12 +260,16 @@ namespace Tokenparser {
 		return 2;
 	}
 
-	int proc_body(std::vector<StmPtr> *parent) {
-		while(!eat(Tokens::TOK_SYS_EOF)) {
+	int proc_body(std::vector<StmPtr> *parent, Tokens::Type end_token) {
+		while(true) {
+			if(eat(end_token))
+				return 0;
+
 			int cons = proc(parent, false);
 			if(cons == 1)
 				return 1;
-			else if(cons == 2) return 0;
+			else if(cons == 2)
+				return 0;
 		}
 		return 0;
 	}

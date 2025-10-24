@@ -17,6 +17,6 @@ namespace Tokenparser {
 	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr>* parent);
 
         int proc(std::vector<StmPtr> *parent, const bool _inline = true);
-        int proc_body(std::vector<StmPtr> *parent);
+        int proc_body(std::vector<StmPtr> *parent, Tokens::Type end_token = Tokens::TOK_SYS_EOF);
 	int proc();
 }
