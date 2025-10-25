@@ -7,8 +7,14 @@
 
 namespace Tokenparser {
 
+	enum {
+		EAT_INFO_EAT = 0b1,
+		EAT_INFO_SKIP = 0b10,
+	};
+
 	void use(std::istream &input_stream);
 	void use(std::shared_ptr<BlockStatement> stm_root);
+	void use(int log_options);
 
 	ExprPtr eval_single(Tokens::Type till);
 	std::shared_ptr<TupleExpression> eval(Tokens::Type till);

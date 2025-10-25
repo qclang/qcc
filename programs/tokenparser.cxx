@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
 
 	Tokenparser::use(*in);
 	Tokenparser::use(stm_root);
+	Tokenparser::use(Tokenparser::EAT_INFO_EAT);
 
 	Tokenparser::proc();
 

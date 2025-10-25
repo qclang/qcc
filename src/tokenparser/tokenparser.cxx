@@ -6,6 +6,7 @@ namespace Tokenparser {
 
 	std::istream  *_input_stream;
 	std::shared_ptr<BlockStatement> stm_root;
+	int _log_options = EAT_INFO_EAT | EAT_INFO_SKIP;
 
 	void use(std::istream &input_stream) {
 	        _input_stream = &input_stream;
@@ -15,17 +16,23 @@ namespace Tokenparser {
 		stm_root = _stm_root;
 	}
 
+	void use(int log_options) {
+		_log_options = log_options;;
+	}
+
 	Token c_token;
 
 	inline int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
 
 		if(ttype == Tokens::TOK_SYS_SKIP) {
-			std::cout << "Skip: " << c_token.line << ":" << c_token.name << std::endl;
+			if(_log_options & EAT_INFO_SKIP )
+				std::cout << "Skip: " << c_token.line << ":" << c_token.name << std::endl;
 			return 1;
 		}
 
 		if(c_token.ttype == ttype) {
-			std::cout << "Eat : " << c_token.line << ":" << c_token.name << std::endl;
+			if(_log_options & EAT_INFO_EAT)
+				std::cout << "Eat : " << c_token.line << ":" << c_token.name << std::endl;
 			_input_stream >> c_token;
 			return 1;
 		}
