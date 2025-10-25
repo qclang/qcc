@@ -244,7 +244,8 @@ namespace Tokenparser {
 		if(eatDec(nullptr, &parent->childs)) {
 			if(_inline) {
 				/* Warning */
-				return 1;
+				/* Maybe can be solved with -O1 or -O2 (I'll add these options later) */
+				return 0;
 			}
 			return 0;
 		}
