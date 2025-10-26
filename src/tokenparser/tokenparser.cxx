@@ -149,13 +149,14 @@ namespace Tokenparser {
 			} else if(eat(Tokens::TOK_DEL_PARANL)) {
 				std::shared_ptr<Typer> func_typer = std::make_shared<Typer>();
 				func_typer->vtype = VAR_FUN;
-				if(!eat(Tokens::TOK_DEL_PARANR)) /* Predict if is it already end */
+				if(!eat(Tokens::TOK_DEL_PARANR)) {/* Predict if is it already end */
 					eatDec(nullptr, &func_typer->func_params);
 
-				if(!eat(Tokens::TOK_DEL_PARANR)) {
-					/* Syntax error, Parantheses ' () ' didn't closed*/
-					unclosedParanthesesError(c_token);
-					return 0;
+					if(!eat(Tokens::TOK_DEL_PARANR)) {
+						/* Syntax error, Parantheses ' () ' didn't closed*/
+						unclosedParanthesesError(c_token);
+						return 0;
+					}
 				}
 
 				if(!post_typer) post_typer = c_post_typer = func_typer;
