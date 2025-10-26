@@ -24,15 +24,19 @@ namespace Tokenparser {
 
 	inline int eat(Tokens::Type ttype) { // return 1 if match, 0 if not match
 
+		std::string token_name = c_token.name;
+		if(ttype == Tokens::TOK_SYS_EOF)
+			token_name = " < End of File >";
+
 		if(ttype == Tokens::TOK_SYS_SKIP) {
 			if(_log_options & EAT_INFO_SKIP )
-				std::cout << "Skip: " << c_token.line << ":" << c_token.name << std::endl;
+				std::cout << "Skip: " << c_token.line << ":" << token_name << std::endl;
 			return 1;
 		}
 
 		if(c_token.ttype == ttype) {
 			if(_log_options & EAT_INFO_EAT)
-				std::cout << "Eat : " << c_token.line << ":" << c_token.name << std::endl;
+				std::cout << "Eat : " << c_token.line << ":" << token_name << std::endl;
 			_input_stream >> c_token;
 			return 1;
 		}
@@ -109,14 +113,14 @@ namespace Tokenparser {
 				if(!eat(Tokens::TOK_DEL_PARANR)) {
 					/* Error */
 					// Should match left paranthese with right one
-					std::cout << "Parantheses didn't closed: " << c_token.name << std::endl;
+					unclosedParanthesesError(c_token);
 					return 0;
 				}
 				break;
 			} else if(parent && c_token.ttype == Tokens::TOK_IDENTIFIER) {
 				if(p_typer) {
 					/* Error */
-					std::cout << "More than one identifiers" << std::endl;
+					moreThanOneIdentifiersError(c_token);
 					return 0;
 				}
 				p_typer = std::make_shared<Typer>();
@@ -149,7 +153,9 @@ namespace Tokenparser {
 					eatDec(nullptr, &func_typer->func_params);
 
 				if(!eat(Tokens::TOK_DEL_PARANR)) {
-					/* Syntax error, S-Brackets ' [] ' didn't closed*/
+					/* Syntax error, Parantheses ' () ' didn't closed*/
+					unclosedParanthesesError(c_token);
+					return 0;
 				}
 
 				if(!post_typer) post_typer = c_post_typer = func_typer;
