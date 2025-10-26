@@ -78,7 +78,7 @@ int proc() {
 			};
 			in.ignore();
 			continue;
-		} else if(std::isalnum(curr) || curr == '_') { // Identifiers/keyword must start with an alphabetic char or an '_' char
+		} else if(std::isalpha(curr) || curr == '_') { // Identifiers/keyword must start with an alphabetic char or an '_' char
 			c_token = readAlpNum(in);
 			procAlpNum(c_token);
 		} else if(std::isdigit(curr) || curr == '.') { // Number literal
