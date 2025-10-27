@@ -222,13 +222,18 @@ namespace Tokenparser {
 		do {
 			std::shared_ptr<Typer> c_typer = std::make_shared<Typer>(*main_typer);
 			if(!eatTyper(c_typer, true, parent)) {
-				//error
+				/* Error */
+				std::cout << "Required a variable declaration!" << std::endl;
 				return 0;
 			} else if(c_typer->vtype == VAR_DEC) {
 				// Now declare/assign a variable with the variable/function 'c_typer->vname' (std::string)
 				std::shared_ptr<DeclarationStatement> stm = std::make_shared<DeclarationStatement>();
 				stm->type_spec = c_typer;
 				parent->push_back(stm);
+			} else {
+				/* Error */
+				std::cout << "Required a variable declaration!" << std::endl;
+				return 0;
 			}
 		} while(eat(Tokens::TOK_COMMA));
 
@@ -264,8 +269,8 @@ namespace Tokenparser {
 			return 0;
 		}
 
-		ExprPtr expr = eval(Tokens::TOK_SYS_SKIP);
-		if(expr) {
+		std::shared_ptr<TupleExpression> expr = eval(Tokens::TOK_SYS_SKIP);
+		if(expr->expressions.size()) {
 			std::shared_ptr<ExpressionStatement> stm = std::make_shared<ExpressionStatement>();
 			stm->expr = expr;
 			parent->childs.push_back(stm);
@@ -276,17 +281,21 @@ namespace Tokenparser {
 	}
 
 	int proc_body(std::shared_ptr<BlockStatement> parent, Tokens::Type end_token) {
+		int ret=0;
 		while(true) {
-			if(eat(end_token))
-				return 0;
 
 			int cons = proc(parent, false);
-			if(cons == 1)
-				return 1;
-			else if(cons == 2)
-				return 0;
+			if(cons == 1) {
+				ret = 1;
+				break;
+			} else if(cons == 2) break;
 		}
-		return 0;
+
+		if(!eat(end_token)) { /* Error */
+			std::cout << "Unexpected token, expected ' } '" << std::endl;
+			ret = 1;
+		}
+		return ret;
 	}
 
 	int proc() {
