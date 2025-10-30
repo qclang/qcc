@@ -264,7 +264,6 @@ namespace Tokenparser {
 			if(_inline) {
 				/* Warning */
 				/* Maybe can be solved with -O1 or -O2 (I'll add these options later) */
-				return 0;
 			}
 			return 0;
 		}
@@ -281,21 +280,19 @@ namespace Tokenparser {
 	}
 
 	int proc_body(std::shared_ptr<BlockStatement> parent, Tokens::Type end_token) {
-		int ret=0;
 		while(true) {
 
 			int cons = proc(parent, false);
-			if(cons == 1) {
-				ret = 1;
-				break;
-			} else if(cons == 2) break;
+			if(cons == 1)
+				return 0;
+			else if(cons == 2) break;
 		}
 
 		if(!eat(end_token)) { /* Error */
 			std::cout << "Unexpected token, expected ' } '" << std::endl;
-			ret = 1;
+			return 1;
 		}
-		return ret;
+		return 0;
 	}
 
 	int proc() {
