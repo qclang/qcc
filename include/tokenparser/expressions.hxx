@@ -82,7 +82,7 @@ struct UnaryExpression : public Expression {
 
 enum {
 	LIT_NUMBER,
-	LIT_FLOAT,
+	LIT_CHAR,
 	LIT_STRING
 };
 
