@@ -27,6 +27,8 @@ namespace Tokenparser {
 		std::string token_name = c_token.name;
 		if(ttype == Tokens::TOK_SYS_EOF)
 			token_name = " < End of File >";
+		else if(ttype == Tokens::TOK_SYS_EOF)
+			token_name = " < Literal >";
 
 		if(ttype == Tokens::TOK_SYS_SKIP) {
 			if(_log_options & EAT_INFO_SKIP )
