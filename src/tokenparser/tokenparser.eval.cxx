@@ -43,26 +43,36 @@ namespace Tokenparser {
 	}
 
 	ExprPtr eval() {
-		{
-			ExprPtr main_expr = evalIDTF();
-			if(main_expr) {
-				if(eat(Tokens::TOK_ASSIGN))
-					return std::make_shared<BinaryExpression>(
-								main_expr,
-								OPE::ASSIGN,
-								eval(Tokens::TOK_SEMICOLON));
-				else
-					return main_expr;
-			}
+		ExprPtr main_expr = evalIDTF();
+		if(main_expr) {
+			if(eat(Tokens::TOK_ASSIGN))
+				return std::make_shared<BinaryExpression>(
+							main_expr,
+							OPE::ASSIGN,
+							eval(Tokens::TOK_SEMICOLON));
+			else
+				return main_expr;
 		}
 
+		if(c_token.ttype == Tokens::TOK_STRING_LITERAL) {
+			std::string name = c_token.name;
+			eat(Tokens::TOK_STRING_LITERAL);
 
+			return std::make_shared<LiteralExpression>(LIT_STRING, name);
+		}
 
 		if(c_token.ttype == Tokens::TOK_NUMBER_LITERAL) {
 			std::string name = c_token.name;
 			eat(Tokens::TOK_NUMBER_LITERAL);
 
 			return std::make_shared<LiteralExpression>(LIT_NUMBER, name);
+		}
+
+		if(c_token.ttype == Tokens::TOK_CHAR_LITERAL) {
+			std::string name = c_token.name;
+			eat(Tokens::TOK_CHAR_LITERAL);
+
+			return std::make_shared<LiteralExpression>(LIT_CHAR, name);
 		}
 
 		return 0;
