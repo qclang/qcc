@@ -255,9 +255,6 @@ namespace Tokenparser {
 
 	int proc(std::shared_ptr<BlockStatement> parent, const bool _inline) {
 
-		if(eat(Tokens::TOK_SEMICOLON))
-			return 0;
-
 		if(eat(Tokens::TOK_DEL_CBRACL)) {
 			if(proc_body(parent, Tokens::TOK_DEL_CBRACR)) return 1;
 
@@ -279,6 +276,9 @@ namespace Tokenparser {
 			parent->childs.push_back(stm);
 			return 0;
 		}
+
+		if(eat(Tokens::TOK_SEMICOLON))
+			return 0;
 
 		return 2;
 	}
