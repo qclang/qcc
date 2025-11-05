@@ -11,14 +11,14 @@ namespace Tokenparser {
 
 			ExprPtr main_expr = eval3();
 
-			if(!main_expr) return 0;
+			if(!main_expr) return 0; /* Error */
 
 			return std::make_shared<UnaryExpression>(main_expr, OPE::INCB);
 		} else if(eat(Tokens::TOK_DEC)) {
 
 			ExprPtr main_expr = eval3();
 
-			if(!main_expr) return 0;
+			if(!main_expr) return 0; /* Error */
 
 			return std::make_shared<UnaryExpression>(main_expr, OPE::DECB);
 		} else if(c_token.ttype == Tokens::TOK_IDENTIFIER) {
@@ -71,12 +71,12 @@ namespace Tokenparser {
 			return std::make_shared<BinaryExpression>(
 						main_expr,
 						OPE::MUL,
-						eval3());
+						eval2());
 		else if(eat(Tokens::TOK_SLASH))
 			return std::make_shared<BinaryExpression>(
 						main_expr,
 						OPE::DIV,
-						eval3());
+						eval2());
 
 		return main_expr;
 	}
@@ -89,12 +89,12 @@ namespace Tokenparser {
 			return std::make_shared<BinaryExpression>(
 						main_expr,
 						OPE::ADD,
-						eval2());
+						eval1());
 		else if(eat(Tokens::TOK_MINUS))
 			return std::make_shared<BinaryExpression>(
 						main_expr,
 						OPE::SUB,
-						eval2());
+						eval1());
 
 		return main_expr;
 	}
@@ -106,7 +106,7 @@ namespace Tokenparser {
 				return std::make_shared<BinaryExpression>(
 							main_expr,
 							OPE::ASSIGN,
-							eval1());
+							eval());
 		return 0;
 	}
 
