@@ -269,6 +269,12 @@ namespace Tokenparser {
 			return 0;
 		}
 
+		if(eat(Tokens::TOK_KEY_RETURN)) {
+			std::shared_ptr<ReturnStatement> stm = std::make_shared<ReturnStatement>();
+			stm->expr = eval(Tokens::TOK_SYS_SKIP);
+			return 0;
+		}
+
 		std::shared_ptr<TupleExpression> expr = eval(Tokens::TOK_SYS_SKIP);
 		if(expr->expressions.size()) {
 			std::shared_ptr<ExpressionStatement> stm = std::make_shared<ExpressionStatement>();
