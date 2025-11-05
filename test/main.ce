@@ -1,0 +1,12 @@
+int square(int a); // Predeclaration
+
+int main() {
+	int i=0, char a;
+	int * ptr;
+	0 * 5 * 3 + 2 + 2 + a++;
+}
+
+
+int square(int a) {
+	return a * a;
+}
