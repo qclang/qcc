@@ -6,17 +6,17 @@ namespace Tokenparser {
 
 	extern Token c_token;
 
-	ExprPtr evalIDTF() {
+	ExprPtr eval3() {
 		if(eat(Tokens::TOK_INC)) {
 
-			ExprPtr main_expr = evalIDTF();
+			ExprPtr main_expr = eval3();
 
 			if(!main_expr) return 0;
 
 			return std::make_shared<UnaryExpression>(main_expr, OPE::INCB);
 		} else if(eat(Tokens::TOK_DEC)) {
 
-			ExprPtr main_expr = evalIDTF();
+			ExprPtr main_expr = eval3();
 
 			if(!main_expr) return 0;
 
@@ -37,21 +37,6 @@ namespace Tokenparser {
 
 
 			return var_expr;
-		}
-
-		return 0;
-	}
-
-	ExprPtr eval() {
-		ExprPtr main_expr = evalIDTF();
-		if(main_expr) {
-			if(eat(Tokens::TOK_ASSIGN))
-				return std::make_shared<BinaryExpression>(
-							main_expr,
-							OPE::ASSIGN,
-							eval(Tokens::TOK_SEMICOLON));
-			else
-				return main_expr;
 		}
 
 		if(c_token.ttype == Tokens::TOK_STRING_LITERAL) {
@@ -75,6 +60,53 @@ namespace Tokenparser {
 			return std::make_shared<LiteralExpression>(LIT_CHAR, name);
 		}
 
+		return 0;
+	}
+
+	ExprPtr eval2() {
+		ExprPtr main_expr = eval3();
+		if(!main_expr) return 0;
+
+		if(eat(Tokens::TOK_STAR))
+			return std::make_shared<BinaryExpression>(
+						main_expr,
+						OPE::MUL,
+						eval3());
+		else if(eat(Tokens::TOK_SLASH))
+			return std::make_shared<BinaryExpression>(
+						main_expr,
+						OPE::DIV,
+						eval3());
+
+		return main_expr;
+	}
+
+	ExprPtr eval1() {
+		ExprPtr main_expr = eval2();
+		if(!main_expr) return 0;
+
+		if(eat(Tokens::TOK_PLUS))
+			return std::make_shared<BinaryExpression>(
+						main_expr,
+						OPE::ADD,
+						eval2());
+		else if(eat(Tokens::TOK_MINUS))
+			return std::make_shared<BinaryExpression>(
+						main_expr,
+						OPE::SUB,
+						eval2());
+
+		return main_expr;
+	}
+
+	ExprPtr eval() {
+		ExprPtr main_expr = eval1();
+		if(main_expr)
+			if(eat(Tokens::TOK_ASSIGN))
+				return std::make_shared<BinaryExpression>(
+							main_expr,
+							OPE::ASSIGN,
+							eval1());
 		return 0;
 	}
 
