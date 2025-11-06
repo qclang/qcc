@@ -33,6 +33,8 @@ enum class OPE {
 
 	MEM, // x.y
 	MEMP, // x->y
+	MEMA, // x[y]
+
 
 	// Unary Operators
 	NOT, // !
@@ -41,7 +43,7 @@ enum class OPE {
 	INCA, // x++
 	DECB, // --x
 	DECA, // x--
-	FUNCALL, // f(...)
+	FUNCALL, // f(...),
 	TYPECAST, // (typename)x
 
 	COMMA // <Expression>, <Expression>       see: https://en.wikipedia.org/wiki/Comma_operator
@@ -74,6 +76,7 @@ struct UnaryExpression : public Expression {
         ExprPtr te;
         OPE op;
 	std::shared_ptr<TupleExpression> tuple;
+	ExprPtr param;
 
         UnaryExpression(ExprPtr te, OPE op);
 

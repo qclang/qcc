@@ -25,7 +25,12 @@ namespace Tokenparser {
 			std::shared_ptr<VariableExpression> var_expr = std::make_shared<VariableExpression>(c_token.name);
 			eat(Tokens::TOK_IDENTIFIER);
 
-			if(eat(Tokens::TOK_DEL_PARANL)) {
+			if(eat(Tokens::TOK_DEL_SBRACL)) {
+				std::shared_ptr<TupleExpression> param = eval(Tokens::TOK_DEL_SBRACR);
+                                std::shared_ptr<UnaryExpression> member = std::make_shared<UnaryExpression>(var_expr, OPE::MEMA);
+                                member->param = param;
+				return member;
+			} else if(eat(Tokens::TOK_DEL_PARANL)) {
 				std::shared_ptr<TupleExpression> tuple = eval(Tokens::TOK_DEL_PARANR);
 				std::shared_ptr<UnaryExpression> func = std::make_shared<UnaryExpression>(var_expr, OPE::FUNCALL);
 				func->tuple = tuple;
