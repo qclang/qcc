@@ -82,6 +82,11 @@ namespace Tokenparser {
 						main_expr,
 						OPE::DIV,
 						eval2());
+		else if(eat(Tokens::TOK_MOD))
+			return std::make_shared<BinaryExpression>(
+						main_expr,
+						OPE::MOD,
+						eval2());
 
 		return main_expr;
 	}
