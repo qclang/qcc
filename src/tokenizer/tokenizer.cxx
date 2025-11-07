@@ -597,6 +597,7 @@ bool isSymbol(const char &c) {
 		case '-':
 		case '*':
 		case '/':
+		case '%':
 		case ':':
 		case ';':
 		case '!':
