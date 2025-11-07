@@ -17,7 +17,8 @@ namespace Tokenparser {
 	void use(int log_options);
 
 	ExprPtr eval_single(Tokens::Type till);
-	std::shared_ptr<TupleExpression> eval(Tokens::Type till);
+	std::shared_ptr<TupleExpression> eval_tuple(Tokens::Type till);
+	ExprPtr eval(Tokens::Type till);
 
 	int eat(Tokens::Type ttype);
 	int eatDec(std::shared_ptr<Typer> main_typer, std::vector<StmPtr> *parent);

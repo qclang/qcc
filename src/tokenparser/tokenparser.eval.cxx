@@ -26,12 +26,12 @@ namespace Tokenparser {
 			eat(Tokens::TOK_IDENTIFIER);
 
 			if(eat(Tokens::TOK_DEL_SBRACL)) {
-				std::shared_ptr<TupleExpression> param = eval(Tokens::TOK_DEL_SBRACR);
+				ExprPtr param = eval(Tokens::TOK_DEL_SBRACR);
                                 std::shared_ptr<UnaryExpression> member = std::make_shared<UnaryExpression>(var_expr, OPE::MEMA);
                                 member->param = param;
 				return member;
 			} else if(eat(Tokens::TOK_DEL_PARANL)) {
-				std::shared_ptr<TupleExpression> tuple = eval(Tokens::TOK_DEL_PARANR);
+				std::shared_ptr<TupleExpression> tuple = eval_tuple(Tokens::TOK_DEL_PARANR);
 				std::shared_ptr<UnaryExpression> func = std::make_shared<UnaryExpression>(var_expr, OPE::FUNCALL);
 				func->tuple = tuple;
 				return func;
@@ -130,7 +130,7 @@ namespace Tokenparser {
 		return expr;
 	}
 
-	std::shared_ptr<TupleExpression> eval(Tokens::Type till) {
+	std::shared_ptr<TupleExpression> eval_tuple(Tokens::Type till) {
 		std::shared_ptr<TupleExpression> tuple = std::make_shared<TupleExpression>();
 		do {
 			ExprPtr expr = eval_single(Tokens::TOK_SYS_SKIP);
@@ -144,5 +144,21 @@ namespace Tokenparser {
 		}
 
 		return tuple;
+	}
+
+	ExprPtr eval(Tokens::Type till) {
+		ExprPtr main_expr = eval_single(Tokens::TOK_SYS_SKIP);
+		if(main_expr) while(eat(Tokens::TOK_COMMA)) {
+			ExprPtr expr = std::make_shared<BinaryExpression>(main_expr, OPE::COMMA, eval_single(Tokens::TOK_SYS_SKIP));
+			if(expr)
+				main_expr = expr;
+			else break;
+		}
+
+		if(!eat(till)) { /* Error */
+			std::cout << "Unexcepted token" << std::endl;
+		}
+
+		return main_expr;
 	}
 }
