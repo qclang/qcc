@@ -275,8 +275,8 @@ namespace Tokenparser {
 			return 0;
 		}
 
-		std::shared_ptr<TupleExpression> expr = eval(Tokens::TOK_SYS_SKIP);
-		if(expr->expressions.size()) {
+		ExprPtr expr = eval(Tokens::TOK_SYS_SKIP);
+		if(expr) {
 			std::shared_ptr<ExpressionStatement> stm = std::make_shared<ExpressionStatement>();
 			stm->expr = expr;
 			parent->childs.push_back(stm);
