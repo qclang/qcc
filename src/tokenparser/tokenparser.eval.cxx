@@ -48,7 +48,7 @@ namespace Tokenparser {
 			return eval(Tokens::TOK_DEL_PARANR);
 
 		if(eat(Tokens::TOK_DEL_SBRACL))
-			return eval(Tokens::TOK_DEL_SBRACR);
+			return eval_tuple(Tokens::TOK_DEL_SBRACR);
 
 		if(c_token.ttype == Tokens::TOK_STRING_LITERAL) {
 			std::string name = c_token.name;
